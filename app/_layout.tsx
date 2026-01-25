@@ -1,5 +1,6 @@
 import { databaseName } from '@/constants/database';
 import { seedOfficialBands } from '@/db/seed';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import { drizzle } from 'drizzle-orm/expo-sqlite';
 import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -67,13 +68,15 @@ const RootLayout = () => {
   }
 
   return (
-    <Suspense fallback={<ActivityIndicator size={'large'} />}>
-      <QueryClientProvider client={queryClient}>
-        <SQLiteProvider databaseName={databaseName}>
-          <Stack />
-        </SQLiteProvider>
-      </QueryClientProvider>
-    </Suspense>
+    <ThemeProvider>
+      <Suspense fallback={<ActivityIndicator size={'large'} />}>
+        <QueryClientProvider client={queryClient}>
+          <SQLiteProvider databaseName={databaseName}>
+            <Stack />
+          </SQLiteProvider>
+        </QueryClientProvider>
+      </Suspense>
+    </ThemeProvider>
   );
 };
 

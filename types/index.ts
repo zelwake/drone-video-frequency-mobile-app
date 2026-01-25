@@ -1,5 +1,23 @@
 // Základní typy pro aplikaci
 
+export type DeviceType = 'VTX' | 'VRX';
+
+export interface Device {
+  id: number;
+  name: string;
+  type: DeviceType;
+  createdAt?: Date;
+}
+
+export interface FrequencyBand {
+  id: number;
+  bandSign: string;
+  name: string;
+  label: string;
+  shortName: string | null;
+  isCustom: boolean;
+}
+
 export interface FrequencyMatch {
   bandId: number;
   bandSign: string;
@@ -54,8 +72,14 @@ export interface BandWithFrequencies {
 
 export interface CreateDeviceData {
   name: string;
-  type: 'VTX' | 'VRX';
+  type: DeviceType;
   bands: { bandId: number; label: string }[];
+}
+
+export interface CreateDeviceInput {
+  name: string;
+  type: DeviceType;
+  bandIds: number[];
 }
 
 export interface CreateCustomBandData {
