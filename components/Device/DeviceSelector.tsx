@@ -2,7 +2,7 @@ import { useDevices } from '@/hooks/useDevices';
 import { DeviceType } from '@/types/index';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Dropdown } from './ui/Dropdown';
+import { Dropdown } from '../ui/Dropdown';
 
 interface DeviceSelectorProps {
   type: DeviceType;

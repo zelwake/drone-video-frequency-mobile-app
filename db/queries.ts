@@ -1,28 +1,25 @@
-import { drizzle } from 'drizzle-orm/expo-sqlite';
-import { eq, desc, and, sql } from 'drizzle-orm';
-import {
-  frequencyBands,
-  bandFrequencies,
-  devices,
-  deviceBands,
-  favorites,
-  history,
-  type NewDevice,
-  type NewDeviceBand,
-  type NewFavorite,
-  type NewHistory,
-  type NewFrequencyBand,
-  type NewBandFrequency,
-} from './schema';
 import type {
   BandWithFrequencies,
+  CreateCustomBandData,
+  CreateDeviceData,
+  DeviceType,
   DeviceWithBands,
   FrequencyMatch,
   NearestFrequenciesResult,
-  CreateDeviceData,
-  CreateCustomBandData,
 } from '@/types';
 import { findExactMatch, findNearestFrequencies } from '@/utils/frequency';
+import { and, desc, eq } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/expo-sqlite';
+import {
+  bandFrequencies,
+  deviceBands,
+  devices,
+  favorites,
+  frequencyBands,
+  history,
+  type NewBandFrequency,
+  type NewDeviceBand,
+} from './schema';
 
 type Database = ReturnType<typeof drizzle<Record<string, never>>>;
 
@@ -133,7 +130,7 @@ export async function deleteCustomBand(db: Database, bandId: number): Promise<bo
  */
 export async function getDevicesByType(
   db: Database,
-  type?: 'VTX' | 'VRX'
+  type?: DeviceType
 ): Promise<DeviceWithBands[]> {
   const devicesQuery = type
     ? db.select().from(devices).where(eq(devices.type, type))

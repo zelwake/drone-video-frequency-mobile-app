@@ -7,10 +7,13 @@ export const DeviceType = {
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export type DeviceType = keyof typeof DeviceType;
 
-export interface Device {
+interface BaseDevice {
   id: number;
   name: string;
   type: DeviceType;
+}
+
+export interface Device extends BaseDevice {
   createdAt?: Date;
 }
 
@@ -32,10 +35,7 @@ export interface FrequencyMatch {
   frequency: number;
 }
 
-export interface DeviceWithBands {
-  id: number;
-  name: string;
-  type: 'VTX' | 'VRX';
+export interface DeviceWithBands extends BaseDevice {
   bands: {
     bandId: number;
     bandSign: string;
@@ -57,7 +57,7 @@ export interface NearestFrequency {
   bandSign: string;
   bandName: string;
   channel: number;
-  deviceType: 'VTX' | 'VRX';
+  deviceType: DeviceType;
   distance: number;
 }
 

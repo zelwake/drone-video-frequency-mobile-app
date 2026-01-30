@@ -37,8 +37,7 @@ const RootLayout = () => {
           setIsSeeding(false);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success]);
+  }, [isSeeding, success]);
 
   if (error) {
     return (

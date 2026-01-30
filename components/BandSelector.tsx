@@ -1,4 +1,4 @@
-import { spacing } from '@/constants/Layout';
+import { fontSize, minTouchSize, spacing } from '@/constants/Layout';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useBands } from '@/hooks/useBands';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -93,17 +93,27 @@ export const BandSelector = ({
                   </Text>
                 )}
               </View>
+              {isSelected && (
+                <View
+                  style={[
+                    {
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      display: 'flex',
+                      gap: 5,
+                    },
+                  ]}
+                >
+                  <Text style={{ fontSize: fontSize.xs }}>Label:</Text>
+                  <Input
+                    placeholder={band.bandSign}
+                    value={bandLabels[band.id] || ''}
+                    onChangeText={(value) => handleLabelChange(band.id, value)}
+                    viewStyle={{ marginBottom: 0, minHeight: minTouchSize / 2 }}
+                  />
+                </View>
+              )}
             </TouchableOpacity>
-
-            {isSelected && (
-              <View style={styles.labelInputContainer}>
-                <Input
-                  placeholder={`Label (default: ${band.bandSign})`}
-                  value={bandLabels[band.id] || ''}
-                  onChangeText={(value) => handleLabelChange(band.id, value)}
-                />
-              </View>
-            )}
           </View>
         );
       })}
@@ -137,6 +147,7 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     borderRadius: 8,
     borderWidth: 2,
+    gap: 1,
   },
   checkbox: {
     width: 24,
@@ -162,10 +173,6 @@ const styles = StyleSheet.create({
   },
   freqRange: {
     fontSize: 12,
-  },
-  labelInputContainer: {
-    marginTop: spacing.sm,
-    marginLeft: 40,
   },
   hint: {
     fontSize: 12,

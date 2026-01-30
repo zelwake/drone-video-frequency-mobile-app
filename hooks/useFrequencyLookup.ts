@@ -1,9 +1,9 @@
-import { useState, useCallback, useEffect } from 'react';
-import { useDatabase } from './useDatabase';
 import * as queries from '@/db/queries';
-import { findNearestFrequencies } from '@/utils/frequency';
 import type { NearestFrequency } from '@/types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { findNearestFrequencies } from '@/utils/frequency';
+import AsyncStorage from 'expo-sqlite/kv-store';
+import { useCallback, useEffect, useState } from 'react';
+import { useDatabase } from './useDatabase';
 
 const LAST_SELECTION_KEY = '@dronefrequency:lastSelection';
 
@@ -55,10 +55,7 @@ export function useFrequencyLookup() {
   }, []);
 
   const handleLookup = useCallback(async () => {
-    if (!frequency) return;
-
-    // Store frequency in a const to help TypeScript understand it's not null
-    const searchFrequency = frequency;
+    if (!frequency || !vtxDeviceId || !vrxDeviceId) return;
 
     setIsLoading(true);
     setVtxResult(null);
@@ -70,17 +67,12 @@ export function useFrequencyLookup() {
       const selection: LastSelection = {
         vtxDeviceId,
         vrxDeviceId,
-        frequency: searchFrequency.toString(),
+        frequency: frequency.toString(),
       };
       await AsyncStorage.setItem(LAST_SELECTION_KEY, JSON.stringify(selection));
 
       // Najít frekvenci
-      const result = await queries.findChannelByFrequency(
-        db,
-        vtxDeviceId ?? undefined,
-        vrxDeviceId ?? undefined,
-        searchFrequency
-      );
+      const result = await queries.findChannelByFrequency(db, vtxDeviceId, vrxDeviceId, frequency);
 
       if (result) {
         if ('vtx' in result && result.vtx) {
@@ -124,7 +116,7 @@ export function useFrequencyLookup() {
                     bandName: band.bandName,
                     channel: channel.number,
                     deviceType: 'VTX',
-                    distance: Math.abs(channel.frequency - searchFrequency),
+                    distance: Math.abs(channel.frequency - frequency),
                   });
                 }
               }
@@ -143,14 +135,14 @@ export function useFrequencyLookup() {
                     bandName: band.bandName,
                     channel: channel.number,
                     deviceType: 'VRX',
-                    distance: Math.abs(channel.frequency - searchFrequency),
+                    distance: Math.abs(channel.frequency - frequency),
                   });
                 }
               }
             }
           }
 
-          const nearest = findNearestFrequencies(allFrequencies, searchFrequency);
+          const nearest = findNearestFrequencies(allFrequencies, frequency);
           if (nearest) {
             const nearestFreqs = [
               ...nearest.lower.map((f: NearestFrequency) => f.frequency),
@@ -163,9 +155,9 @@ export function useFrequencyLookup() {
 
       // Přidat do historie
       await queries.addToHistory(db, {
-        vtxDeviceId: vtxDeviceId ?? undefined,
-        vrxDeviceId: vrxDeviceId ?? undefined,
-        frequency: searchFrequency,
+        vtxDeviceId: vtxDeviceId,
+        vrxDeviceId: vrxDeviceId,
+        frequency: frequency,
       });
     } catch (error) {
       console.error('Lookup error:', error);

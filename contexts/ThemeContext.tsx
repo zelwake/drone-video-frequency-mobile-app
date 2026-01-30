@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useColorScheme } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors, type ColorScheme, type ThemeColors } from '@/constants/Colors';
+import AsyncStorage from 'expo-sqlite/kv-store';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useColorScheme } from 'react-native';
 
 type ThemeMode = 'light' | 'dark' | 'system';
 

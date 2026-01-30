@@ -1,12 +1,12 @@
 import * as queries from '@/db/queries';
-import type { CreateDeviceData, CreateDeviceInput } from '@/types';
+import type { BandWithFrequencies, CreateDeviceData, CreateDeviceInput, DeviceType } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDatabase } from './useDatabase';
 
 /**
  * Hook pro získání všech zařízení podle typu
  */
-export function useDevices(type?: 'VTX' | 'VRX') {
+export function useDevices(type?: DeviceType) {
   const db = useDatabase();
 
   return useQuery({
@@ -29,18 +29,30 @@ export function useDevice(deviceId: number | null) {
 }
 
 /**
+ * Hook pro získání všech pásem
+ */
+export function useGetAllBands() {
+  const db = useDatabase();
+
+  return useQuery<BandWithFrequencies[]>({
+    queryKey: ['bands', db],
+    queryFn: () => queries.getAllBands(db),
+  });
+}
+
+/**
  * Hook pro vytvoření zařízení
  */
 export function useCreateDevice() {
   const db = useDatabase();
   const queryClient = useQueryClient();
+  const { data: allBands } = useGetAllBands();
 
   return useMutation({
     mutationFn: async (input: CreateDeviceInput) => {
       // Get band info to create labels
-      const allBands = await queries.getAllBands(db);
       const bands = input.bandIds.map((bandId) => {
-        const band = allBands.find((b) => b.id === bandId);
+        const band = allBands?.find((b) => b.id === bandId);
         // Use custom label if provided, otherwise use bandSign
         const label = input.bandLabels?.[bandId] || band?.bandSign || `Band ${bandId}`;
         return {
@@ -59,6 +71,7 @@ export function useCreateDevice() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['devices'] });
+      queryClient.invalidateQueries({ queryKey: ['bands'] });
     },
   });
 }
@@ -102,6 +115,7 @@ export function useUpdateDevice() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['devices'] });
+      queryClient.invalidateQueries({ queryKey: ['bands'] });
       queryClient.invalidateQueries({ queryKey: ['device', variables.deviceId] });
     },
   });
@@ -118,6 +132,7 @@ export function useDeleteDevice() {
     mutationFn: (deviceId: number) => queries.deleteDevice(db, deviceId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['devices'] });
+      queryClient.invalidateQueries({ queryKey: ['bands'] });
     },
   });
 }

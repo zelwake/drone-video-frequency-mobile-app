@@ -1,4 +1,4 @@
-import { DeviceSelector } from '@/components/DeviceSelector';
+import { DeviceSelector } from '@/components/Device/DeviceSelector';
 import { FrequencyInput } from '@/components/FrequencyInput';
 import { FrequencySuggestions } from '@/components/FrequencySuggestions';
 import { SettingResult } from '@/components/SettingResult';

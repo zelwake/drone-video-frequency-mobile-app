@@ -3,24 +3,27 @@ import { useTheme } from '@/contexts/ThemeContext';
 import React from 'react';
 import {
   KeyboardTypeOptions,
+  StyleProp,
   StyleSheet,
   Text,
   TextInput,
   TextInputProps,
   View,
+  ViewStyle,
 } from 'react-native';
 
-interface InputProps extends Omit<TextInputProps, 'style'> {
+interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
   keyboardType?: KeyboardTypeOptions;
+  viewStyle?: StyleProp<ViewStyle>;
 }
 
-export function Input({ label, error, keyboardType = 'default', ...props }: InputProps) {
+export function Input({ label, error, keyboardType = 'default', viewStyle, ...props }: InputProps) {
   const { colors } = useTheme();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, viewStyle]}>
       {label && <Text style={[styles.label, { color: colors.text }]}>{label}</Text>}
       <TextInput
         style={[
@@ -53,6 +56,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: borderRadius.sm,
     padding: spacing.md,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.sm,
     fontSize: fontSize.md,
     minHeight: minTouchSize,
   },

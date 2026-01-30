@@ -2,10 +2,10 @@ import { BandSelector } from '@/components/BandSelector';
 import { Button } from '@/components/ui/Button';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { Input } from '@/components/ui/Input';
-import { spacing } from '@/constants/Layout';
+import { fontSize, spacing } from '@/constants/Layout';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useDevice, useUpdateDevice } from '@/hooks/useDevices';
-import type { DeviceType } from '@/types';
+import { DeviceType } from '@/types';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
@@ -29,15 +29,12 @@ const EditDeviceScreen = () => {
   const updateDevice = useUpdateDevice();
 
   const [name, setName] = useState('');
-  const [type, setType] = useState<DeviceType>('VTX');
+  const [type, setType] = useState<DeviceType>(DeviceType.VTX);
   const [selectedBandIds, setSelectedBandIds] = useState<number[]>([]);
   const [bandLabels, setBandLabels] = useState<Record<number, string>>({});
   const [isInitialized, setIsInitialized] = useState(false);
 
-  const [errors, setErrors] = useState<{
-    name?: string;
-    bands?: string;
-  }>({});
+  const [errors, setErrors] = useState<{ name?: string; bands?: string }>({});
 
   useEffect(() => {
     if (device && !isInitialized) {
@@ -133,8 +130,8 @@ const EditDeviceScreen = () => {
           value={type}
           onChange={(value) => setType(value as DeviceType)}
           options={[
-            { label: 'VTX (Transmitter)', value: 'VTX' },
-            { label: 'VRX (Receiver)', value: 'VRX' },
+            { label: 'VTX (Transmitter)', value: DeviceType.VTX },
+            { label: 'VRX (Receiver)', value: DeviceType.VRX },
           ]}
         />
 
@@ -185,7 +182,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     marginTop: spacing.md,
-    fontSize: 14,
+    fontSize: fontSize.sm,
   },
 });
 
