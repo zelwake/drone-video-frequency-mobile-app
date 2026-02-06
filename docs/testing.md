@@ -4,6 +4,12 @@
 
 All test descriptions, test names, and code comments should be written in **English** to maintain consistency with the codebase.
 
+## Test Backlog Policy
+
+- Use `it.todo()` for all planned tests.
+- Avoid commented-out blocks or placeholder tests that execute.
+- `it.todo()` entries can be removed safely when scope changes.
+
 ## Testing Library Queries
 
 **Always use `screen` from `@testing-library/react-native` instead of destructuring the render result.**

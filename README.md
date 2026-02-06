@@ -45,9 +45,10 @@ pnpm ios
 
 ## 📚 Documentation
 
-- [Developer Documentation](./docs/README.md) - Complete developer documentation
+- [Developer Documentation](./docs/README.md) - Start here for full docs
+- [Project Roadmap](./docs/roadmap.md) - MVP status and TODOs
 - [Manual Testing Plan](./docs/MANUAL_TESTING.md) - Test plans for manual testing
-- [Agents Guidelines](./AGENTS.md) - Guidelines for AI coding agents
+- [Agents Guidelines](./AGENTS.md) - AI agent overview and links
 
 ## 🧪 Testing
 
@@ -64,18 +65,7 @@ pnpm lint
 
 ## 📖 Official Bands
 
-The application includes 10 pre-configured FPV bands:
-
-- **A** - Boscam A
-- **B** - Boscam B
-- **E** - Boscam E
-- **F** - FatShark / NexWave
-- **R** - Race Band
-- **D** - Boscam D / DJI
-- **U** - U Band
-- **O** - O Band
-- **L** - Low Band
-- **H** - High Band
+See [docs/database.md](./docs/database.md) for official band details.
 
 ## 🗂️ Project Structure
 
@@ -93,19 +83,7 @@ DroneFrequency/
 
 ## 🔄 Database
 
-The application uses SQLite with Drizzle ORM. On first launch, it automatically:
-
-1. Creates `frequencies.db` database
-2. Runs migrations
-3. Seeds with official FPV bands
-
-```bash
-# Generate new migration
-npx drizzle-kit generate
-
-# Open Drizzle Studio
-npx drizzle-kit studio
-```
+SQLite + Drizzle ORM. Migrations and schema details live in [docs/database.md](./docs/database.md).
 
 ## 🎨 Screenshots
 
@@ -133,97 +111,4 @@ MIT
 
 ## 🎯 Project Status
 
-**Version**: 1.0.0 (MVP in development)  
-**Last Update**: 2026-01-25
-
-### ✅ Completed Features (MVP Core)
-
-- **Database & Schema**
-  - ✅ SQLite database with Drizzle ORM
-  - ✅ Migrations and seed data (10 official FPV bands)
-  - ✅ Schema for devices, bands, frequencies, history
-
-- **Device Management**
-  - ✅ Add/edit/delete VTX/VRX devices
-  - ✅ Band mapping to devices
-  - ✅ Custom band labels (band aliases)
-  - ✅ Display frequencies for each band
-
-- **Frequency Lookup**
-  - ✅ Main search screen
-  - ✅ Select VTX and/or VRX devices
-  - ✅ Enter frequency and find channel
-  - ✅ Display nearest frequencies on inexact match
-  - ✅ Save last selection
-  - ✅ Display custom band labels in results
-  - ✅ Search history (save to DB)
-
-- **UI/UX**
-  - ✅ Light/Dark mode with toggle
-  - ✅ Tab navigation (Home, Devices, Favorites, Settings)
-  - ✅ Vertical BandSelector with checkboxes and inline editor
-  - ✅ Responsive components (Input, Button, Dropdown, Card)
-  - ✅ Edge-to-edge support (Android)
-
-- **Code Quality**
-  - ✅ TypeScript strict mode
-  - ✅ ESLint + Prettier configuration
-  - ✅ Type-safe routing (Expo Router)
-  - ✅ TanStack Query for state management
-
-### 🚧 In Progress Features
-
-- **Favorites**
-  - ⏳ UI ready, functionality placeholder
-  - ⏳ Database structure exists, implementation pending
-
-- **Settings**
-  - ⏳ Basic screen with theme switcher
-  - ⏳ Additional settings needed (units, language, etc.)
-
-### 📋 TODO - Core Features
-
-- [ ] **Spectrum Visualization**
-  - [ ] Chart displaying all frequencies
-  - [ ] Channel grid with occupied channels marked
-  - [ ] Visual conflict detection
-
-- [ ] **Find Free Channels**
-  - [ ] Algorithm for conflict detection
-  - [ ] Free frequency recommendations
-  - [ ] Display distance between channels
-
-- [ ] **Favorites (completion)**
-  - [ ] Implement CRUD operations
-  - [ ] Quick access from main screen
-  - [ ] Share/export favorite configurations
-
-- [ ] **History (expansion)**
-  - [ ] UI for displaying history
-  - [ ] Filtering and search
-  - [ ] Ability to restore previous searches
-
-- [ ] **Custom Bands**
-  - [ ] UI for creating custom bands
-  - [ ] Frequency validation (8 channels max)
-  - [ ] Import/export custom bands
-
-### 🎨 Nice to Have
-
-- [ ] **Reverse lookup** - Enter frequency → instant channel display without device selection
-- [ ] **Partial device selection** - Indicator when channel can only be set on one device (VTX or VRX)
-- [ ] **Multi-device comparison** - Compare frequencies between multiple devices at once
-- [ ] **Export/Import** - Backup/restore all data (devices, favorites, custom bands)
-- [ ] **QR Code** - Share configuration via QR code
-- [ ] **Voice input** - Voice entry for frequency
-- [ ] **Widgets** - Home screen widget for quick access
-- [ ] **Apple Watch/WearOS** - Companion application
-- [ ] **Offline maps** - Map of nearby FPV pilots with their frequencies
-
-### 🐛 Known Issues
-
-_None reported yet_
-
----
-
-**Status**: 🚧 MVP Core Complete - Moving to Phase 2
+See [docs/roadmap.md](./docs/roadmap.md) for MVP status, TODOs, and known issues.
