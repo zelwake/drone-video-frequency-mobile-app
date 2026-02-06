@@ -4,12 +4,12 @@
  */
 
 import HomeScreen from '@/app/(tabs)/index';
-import { DeviceType } from '@/types';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import AsyncStorage from 'expo-sqlite/kv-store';
 import React from 'react';
 import { Alert } from 'react-native';
 import { renderWithProviders } from '../helpers/test-utils';
+
+import { useFrequencyLookup } from '@/hooks/useFrequencyLookup';
 
 // Mock useFrequencyLookup hook
 const mockHandleLookup = jest.fn();
@@ -20,8 +20,6 @@ const mockSetFrequency = jest.fn();
 jest.mock('@/hooks/useFrequencyLookup', () => ({
   useFrequencyLookup: jest.fn(),
 }));
-
-import { useFrequencyLookup } from '@/hooks/useFrequencyLookup';
 
 describe('HomeScreen', () => {
   beforeEach(() => {

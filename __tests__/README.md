@@ -1,114 +1,114 @@
-# DroneFrequency - Testovací dokumentace
+# DroneFrequency - Testing Documentation
 
 > **Note:** All test descriptions, test names, and code comments should be written in **English** to maintain consistency with the codebase.
 
-## 📁 Struktura testů
+## 📁 Test Structure
 
 ```
 __tests__/
-├── helpers/                     # Pomocné utility pro testy
-│   ├── test-utils.tsx          # Custom render s providery
-│   ├── db-helpers.ts           # In-memory DB setup (připraveno pro budoucí použití)
-│   └── mock-data.ts            # Testovací data (bands, devices, frequencies)
-├── screens/                    # Testy pro obrazovky
-│   ├── HomeScreen.test.tsx     # Hlavní vyhledávací obrazovka
-│   ├── DevicesScreen.test.tsx  # Seznam zařízení
-│   ├── AddDeviceScreen.test.tsx # Formulář přidání zařízení
-│   └── EditDeviceScreen.test.tsx # Formulář editace zařízení
-├── components/                 # Testy pro komponenty
-│   ├── DeviceList.test.tsx     # Seznam + přepínání režimů
-│   ├── DeviceCard.test.tsx     # Karta zařízení
-│   ├── SettingResult.test.tsx  # Zobrazení výsledku vyhledávání
-│   └── FrequencySuggestions.test.tsx # Návrhy frekvencí
-├── frequency.test.ts           # Unit testy pro frequency utils
-└── setup.ts                    # Globální setup a mocky
+├── helpers/                     # Test utility helpers
+│   ├── test-utils.tsx          # Custom render with providers
+│   ├── db-helpers.ts           # In-memory DB setup (prepared for future use)
+│   └── mock-data.ts            # Test data (bands, devices, frequencies)
+├── screens/                    # Screen tests
+│   ├── HomeScreen.test.tsx     # Main search screen
+│   ├── DevicesScreen.test.tsx  # Device list
+│   ├── AddDeviceScreen.test.tsx # Add device form
+│   └── EditDeviceScreen.test.tsx # Edit device form
+├── components/                 # Component tests
+│   ├── DeviceList.test.tsx     # List + mode switching
+│   ├── DeviceCard.test.tsx     # Device card
+│   ├── SettingResult.test.tsx  # Search result display
+│   └── FrequencySuggestions.test.tsx # Frequency suggestions
+├── frequency.test.ts           # Unit tests for frequency utils
+└── setup.ts                    # Global setup and mocks
 ```
 
-## 🚀 Spuštění testů
+## 🚀 Running Tests
 
 ```bash
-# Všechny testy
+# All tests
 pnpm test
 
-# Watch režim (sleduje změny)
+# Watch mode (watches for changes)
 pnpm test:watch
 
-# Konkrétní test file
+# Specific test file
 pnpm test HomeScreen
 
-# S code coverage
+# With code coverage
 pnpm test -- --coverage
 ```
 
-## 📋 Testovací scénáře
+## 📋 Test Scenarios
 
-### ✅ Implementované testy
+### ✅ Implemented Tests
 
 #### **HomeScreen**
 
-- ✅ Alert při vyhledávání bez vybraného zařízení
-- 📝 Todo: Validace frekvence, vyhledávání s VTX/VRX, suggestions
+- ✅ Alert when searching without selected device
+- 📝 Todo: Frequency validation, search with VTX/VRX, suggestions
 
-#### **Utility testy (frequency.test.ts)**
+#### **Utility tests (frequency.test.ts)**
 
-- ✅ findExactMatch - nalezení přesné frekvence
-- ✅ findNearestFrequencies - nalezení nejbližších frekvencí
-- ✅ calculateInterferenceScore - výpočet interference
+- ✅ findExactMatch - find exact frequency
+- ✅ findNearestFrequencies - find nearest frequencies
+- ✅ calculateInterferenceScore - calculate interference
 
-### 📝 TODO testy (připravené scénáře)
+### 📝 TODO Tests (prepared scenarios)
 
-#### **DevicesScreen** (28 todo testů)
+#### **DevicesScreen** (28 todo tests)
 
-- Prázdný stav
-- Mazání zařízení
-- Navigace
-- Loading states
-
-#### **AddDeviceScreen** (41 todo testů)
-
-- Validace formuláře
-- Úspěšné vytvoření
+- Empty state
+- Delete device
 - Navigation
 - Loading states
-- BandSelector interakce
 
-#### **EditDeviceScreen** (35 todo testů)
+#### **AddDeviceScreen** (41 todo tests)
 
-- Načtení dat
-- Validace
-- Update zařízení
+- Form validation
+- Successful creation
+- Navigation
+- Loading states
+- BandSelector interaction
+
+#### **EditDeviceScreen** (35 todo tests)
+
+- Data loading
+- Validation
+- Device update
 - Error handling
 
-#### **DeviceList** (24 todo testů)
+#### **DeviceList** (24 todo tests)
 
-- Přepínání edit/delete režimů
-- Vizuální změny
+- Edit/delete mode switching
+- Visual changes
 - Navigation
-- Mazání
+- Deletion
 
-#### **SettingResult** (14 todo testů)
+#### **SettingResult** (14 todo tests)
 
-- Zobrazení VTX/VRX výsledků
+- VTX/VRX result display
 - Band alias
 - Styling
 
-#### **FrequencySuggestions** (17 todo testů)
+#### **FrequencySuggestions** (17 todo tests)
 
-- Zobrazení návrhů
-- Interakce
+- Suggestion display
+- Interaction
 - Edge cases
 
-#### **DeviceCard** (14 todo testů)
+#### **DeviceCard** (14 todo tests)
 
-- Zobrazení informací
-- Edit/delete režimy
+- Information display
+- Edit/delete modes
 - Styling
 
-**Celkem: 168 připravených TODO testů + 12 implementovaných = 180 testů**
+**Total: 168 prepared TODO tests + 12 implemented = 180 tests**
 
-## 🛠️ Struktura testu
+## 🛠️ Test Structure
 
-### Základní šablona
+### Basic Template
 
 ```typescript
 import { renderWithProviders } from '../helpers/test-utils';
@@ -126,16 +126,16 @@ describe('MyComponent', () => {
 });
 ```
 
-### S mockem databázových queries
+### With Database Query Mocks
 
 ```typescript
-// Na začátku souboru
+// At the beginning of file
 jest.mock('@/db/queries', () => ({
   getDevices: jest.fn(() => Promise.resolve([])),
   createDevice: jest.fn(() => Promise.resolve(1)),
 }));
 
-// V testu
+// In test
 import * as queries from '@/db/queries';
 
 it('should fetch devices', async () => {
@@ -149,7 +149,7 @@ it('should fetch devices', async () => {
 });
 ```
 
-### S testováním alertů
+### With Alert Testing
 
 ```typescript
 import { Alert } from 'react-native';
@@ -168,24 +168,24 @@ it('should show alert on error', async () => {
 });
 ```
 
-## 🔧 Mocky a konfigurace
+## 🔧 Mocks and Configuration
 
-### Globální mocky (setup.ts)
+### Global Mocks (setup.ts)
 
-- **Expo SQLite** - Mock in-memory databáze
+- **Expo SQLite** - Mock in-memory database
 - **AsyncStorage** - Mock key-value storage
-- **Alert** - Mock s console.log výstupem
-- **Expo Router** - Mock navigace
-- **Expo Haptics** - Mock haptické zpětné vazby
-- **@expo/vector-icons** - Mock jako Text komponenta
+- **Alert** - Mock with console.log output
+- **Expo Router** - Mock navigation
+- **Expo Haptics** - Mock haptic feedback
+- **@expo/vector-icons** - Mock as Text component
 
-### Custom render (test-utils.tsx)
+### Custom Render (test-utils.tsx)
 
-`renderWithProviders()` automaticky obalí komponentu:
+`renderWithProviders()` automatically wraps component with:
 
-- `QueryClientProvider` - s fresh QueryClient pro každý test
-- `ThemeProvider` - pro theme colors
-- `DeviceScreenProvider` - volitelně pro device context
+- `QueryClientProvider` - with fresh QueryClient for each test
+- `ThemeProvider` - for theme colors
+- `DeviceScreenProvider` - optionally for device context
 
 ```typescript
 const { getByText, queryClient } = renderWithProviders(
@@ -194,29 +194,29 @@ const { getByText, queryClient } = renderWithProviders(
 );
 ```
 
-## 📊 Pokrytí kódem
+## 📊 Code Coverage
 
-Pro generování code coverage reportu:
+To generate code coverage report:
 
 ```bash
 pnpm test -- --coverage --collectCoverageFrom="app/**/*.{ts,tsx}" --collectCoverageFrom="components/**/*.{ts,tsx}"
 ```
 
-## ⚠️ Známé problémy
+## ⚠️ Known Issues
 
-### Act warnings
+### Act Warnings
 
-Warnings typu "not wrapped in act(...)" od TanStack Query jsou známý problém a nejsou kritické.
-Souvisí s asynchronními updates při načítání dat. Lze ignorovat nebo vyřešit správnou konfigurací notifyManager.
+Warnings like "not wrapped in act(...)" from TanStack Query are a known issue and not critical.
+They relate to asynchronous updates when loading data. Can be ignored or resolved with proper notifyManager configuration.
 
-## 🔄 Další kroky
+## 🔄 Next Steps
 
-1. **Implementovat zbývající testy** - postupně dokončit TODO testy
-2. **E2E testy** - zvážit Detox nebo Maestro pro end-to-end testy
-3. **Snapshot testy** - pro UI komponenty pokud bude potřeba
-4. **Performance testy** - pro kritické operace (vyhledávání frekvencí)
+1. **Implement remaining tests** - gradually complete TODO tests
+2. **E2E tests** - consider Detox or Maestro for end-to-end tests
+3. **Snapshot tests** - for UI components if needed
+4. **Performance tests** - for critical operations (frequency search)
 
-## 📚 Užitečné odkazy
+## 📚 Useful Links
 
 - [React Native Testing Library](https://callstack.github.io/react-native-testing-library/)
 - [Jest](https://jestjs.io/)

@@ -1,5 +1,5 @@
 /**
- * Barevné palety pro světlý a tmavý režim
+ * Color palettes for light and dark mode
  */
 export const Colors = {
   light: {

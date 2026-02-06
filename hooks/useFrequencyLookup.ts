@@ -25,7 +25,7 @@ interface LookupResult {
 }
 
 /**
- * Hlavní hook pro frequency lookup s state managementem
+ * Main hook for frequency lookup with state management
  */
 export function useFrequencyLookup() {
   const db = useDatabase();
@@ -37,7 +37,7 @@ export function useFrequencyLookup() {
   const [suggestions, setSuggestions] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Načíst poslední výběr při startu
+  // Load last selection on mount
   useEffect(() => {
     AsyncStorage.getItem(LAST_SELECTION_KEY).then((saved) => {
       if (saved) {
@@ -56,7 +56,7 @@ export function useFrequencyLookup() {
   }, []);
 
   const handleLookup = useCallback(async () => {
-    // Validace - musí být zadaná frekvence a alespoň jedno zařízení
+    // Validation - frequency and at least one device required
     if (!frequency || (!vtxDeviceId && !vrxDeviceId)) {
       logger.warn('Lookup skipped: missing frequency or no device selected', {
         frequency,
@@ -74,15 +74,13 @@ export function useFrequencyLookup() {
     setSuggestions([]);
 
     try {
-      // Uložit výběr
+      // Save selection
       const selection: LastSelection = {
         vtxDeviceId,
         vrxDeviceId,
         frequency: frequency.toString(),
       };
       await AsyncStorage.setItem(LAST_SELECTION_KEY, JSON.stringify(selection));
-
-      // Najít frekvenci
       const result = await queries.findChannelByFrequency(
         db,
         vtxDeviceId ?? undefined,
@@ -122,10 +120,9 @@ export function useFrequencyLookup() {
           logger.debug(`No VRX match found for device ${vrxDeviceId}`);
         }
 
-        // Pokud není exact match, najít nejbližší frekvence
+        // If no exact match, find nearest frequencies
         if (!result.exact) {
           logger.debug('No exact match, finding nearest frequencies');
-          // Získat všechny dostupné frekvence pro oba devices
           const allFrequencies: NearestFrequency[] = [];
 
           if (vtxDeviceId) {
@@ -189,7 +186,6 @@ export function useFrequencyLookup() {
         logger.debug('No result returned from findChannelByFrequency');
       }
 
-      // Přidat do historie
       await queries.addToHistory(db, {
         vtxDeviceId: vtxDeviceId ?? undefined,
         vrxDeviceId: vrxDeviceId ?? undefined,

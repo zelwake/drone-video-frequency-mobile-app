@@ -1,4 +1,4 @@
-// Základní typy pro aplikaci
+// Base types for application
 
 export const DeviceType = {
   VTX: 'VTX',

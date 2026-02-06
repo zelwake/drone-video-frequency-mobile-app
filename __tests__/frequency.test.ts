@@ -1,7 +1,7 @@
 import {
+  calculateInterferenceScore,
   findExactMatch,
   findNearestFrequencies,
-  calculateInterferenceScore,
 } from '../utils/frequency';
 
 describe('Frequency Utils', () => {

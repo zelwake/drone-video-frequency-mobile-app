@@ -2,13 +2,13 @@ import { Directory, File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { consoleTransport, logger as rnLogger, transportFunctionType } from 'react-native-logs';
 
-// Konfigurace log souborů
+// Configurations of logger files
 const LOG_DIR = new Directory(Paths.document, 'logs');
 const LOG_NAME = 'app.log';
 const MAX_LOG_SIZE = 1024 * 1024; // 1 MB
 const MAX_LOG_FILES = 3; // app.log, app.log.1, app.log.2
 
-// Vytvoření log složky při prvním spuštění
+// Create log directory on start
 const ensureLogDirExists = () => {
   if (!LOG_DIR.exists) {
     LOG_DIR.create({ intermediates: true });
@@ -17,7 +17,7 @@ const ensureLogDirExists = () => {
 
 type RotatingFileTransportProps = object;
 
-// Custom file transport s rotací
+// Custom file transport with rotation
 const rotatingFileTransport: transportFunctionType<RotatingFileTransportProps> = async (props) => {
   try {
     console.debug({ msg: props.msg, level: props.level, extension: props.extension });
@@ -87,14 +87,14 @@ export const logger = rnLogger.createLogger({
 });
 
 /**
- * Exportuje všechny log soubory jako jeden spojený text
+ * Exports all log files as single text file
  */
 export const exportLogs = async (): Promise<string> => {
   try {
     ensureLogDirExists();
     let allLogs = '';
 
-    // Čti všechny log soubory v pořadí (od nejnovějšího)
+    // Read all log files starting with newest
     for (let i = 0; i < MAX_LOG_FILES; i++) {
       const fileName = i === 0 ? LOG_NAME : `${LOG_NAME}.${i}`;
       const logFile = new File(LOG_DIR, fileName);
@@ -113,9 +113,6 @@ export const exportLogs = async (): Promise<string> => {
   }
 };
 
-/**
- * Sdílí logy pomocí native share dialogu
- */
 export const shareLogs = async (): Promise<void> => {
   try {
     const isAvailable = await Sharing.isAvailableAsync();
@@ -123,7 +120,7 @@ export const shareLogs = async (): Promise<void> => {
       throw new Error('Sharing is not available on this device');
     }
 
-    // Vytvoř dočasný soubor se všemi logy
+    // Creates temp file with all logs info
     const allLogs = await exportLogs();
     const tempDir = new Directory(Paths.cache);
     const tempFile = new File(tempDir, `app-logs-${Date.now()}.txt`);
@@ -145,9 +142,6 @@ export const shareLogs = async (): Promise<void> => {
   }
 };
 
-/**
- * Smaže všechny log soubory
- */
 export const clearLogs = async (): Promise<void> => {
   try {
     ensureLogDirExists();
@@ -168,9 +162,6 @@ export const clearLogs = async (): Promise<void> => {
   }
 };
 
-/**
- * Vrací velikost všech log souborů v bytech
- */
 export const getLogSize = async (): Promise<number> => {
   try {
     ensureLogDirExists();

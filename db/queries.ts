@@ -26,7 +26,7 @@ type Database = ReturnType<typeof drizzle<Record<string, never>>>;
 // ========== BANDS ==========
 
 /**
- * Získat všechna pásma včetně frekvencí
+ * Get all bands including frequencies
  */
 export async function getAllBands(db: Database): Promise<BandWithFrequencies[]> {
   const bands = await db.select().from(frequencyBands);
@@ -53,7 +53,7 @@ export async function getAllBands(db: Database): Promise<BandWithFrequencies[]> 
 }
 
 /**
- * Získat pouze oficiální pásma (ne custom)
+ * Get only official bands (not custom)
  */
 export async function getOfficialBands(db: Database): Promise<BandWithFrequencies[]> {
   const bands = await db.select().from(frequencyBands).where(eq(frequencyBands.isCustom, false));
@@ -80,7 +80,7 @@ export async function getOfficialBands(db: Database): Promise<BandWithFrequencie
 }
 
 /**
- * Vytvořit custom pásmo
+ * Create custom band
  */
 export async function createCustomBand(db: Database, data: CreateCustomBandData): Promise<number> {
   const [band] = await db
@@ -93,7 +93,6 @@ export async function createCustomBand(db: Database, data: CreateCustomBandData)
     })
     .returning({ id: frequencyBands.id });
 
-  // Vložit frekvence
   const frequencyValues: NewBandFrequency[] = data.frequencies.map((freq, index) => ({
     bandId: band.id,
     channelNumber: index + 1,
@@ -106,10 +105,10 @@ export async function createCustomBand(db: Database, data: CreateCustomBandData)
 }
 
 /**
- * Smazat custom pásmo (pouze custom, ne oficiální!)
+ * Delete custom band (only custom, not official!)
  */
 export async function deleteCustomBand(db: Database, bandId: number): Promise<boolean> {
-  // Zkontrolovat že je to custom pásmo
+  // Check that it's a custom band
   const [band] = await db
     .select()
     .from(frequencyBands)
@@ -126,7 +125,7 @@ export async function deleteCustomBand(db: Database, bandId: number): Promise<bo
 // ========== DEVICES ==========
 
 /**
- * Získat všechna zařízení podle typu
+ * Get all devices by type
  */
 export async function getDevicesByType(
   db: Database,
@@ -183,7 +182,7 @@ export async function getDevicesByType(
 }
 
 /**
- * Získat jedno zařízení podle ID
+ * Get single device by ID
  */
 export async function getDevice(db: Database, deviceId: number): Promise<DeviceWithBands | null> {
   const [device] = await db.select().from(devices).where(eq(devices.id, deviceId));
@@ -229,7 +228,7 @@ export async function getDevice(db: Database, deviceId: number): Promise<DeviceW
 }
 
 /**
- * Vytvořit nové zařízení s pásmy
+ * Create new device with bands
  */
 export async function createDevice(db: Database, data: CreateDeviceData): Promise<number> {
   const [device] = await db
@@ -240,7 +239,6 @@ export async function createDevice(db: Database, data: CreateDeviceData): Promis
     })
     .returning({ id: devices.id });
 
-  // Přidat pásma k zařízení
   if (data.bands.length > 0) {
     const deviceBandValues: NewDeviceBand[] = data.bands.map((band) => ({
       deviceId: device.id,
@@ -255,7 +253,7 @@ export async function createDevice(db: Database, data: CreateDeviceData): Promis
 }
 
 /**
- * Aktualizovat zařízení
+ * Update device
  */
 export async function updateDevice(
   db: Database,
@@ -273,10 +271,8 @@ export async function updateDevice(
   }
 
   if (data.bands) {
-    // Smazat stávající pásma
     await db.delete(deviceBands).where(eq(deviceBands.deviceId, deviceId));
 
-    // Přidat nová pásma
     if (data.bands.length > 0) {
       const deviceBandValues: NewDeviceBand[] = data.bands.map((band) => ({
         deviceId,
@@ -290,7 +286,7 @@ export async function updateDevice(
 }
 
 /**
- * Smazat zařízení
+ * Delete device
  */
 export async function deleteDevice(db: Database, deviceId: number): Promise<void> {
   await db.delete(devices).where(eq(devices.id, deviceId));
@@ -299,7 +295,7 @@ export async function deleteDevice(db: Database, deviceId: number): Promise<void
 // ========== FREQUENCY LOOKUP ==========
 
 /**
- * Hlavní funkce pro vyhledání nastavení podle frekvence
+ * Main function to find channel settings by frequency
  */
 export async function findChannelByFrequency(
   db: Database,
@@ -314,7 +310,6 @@ export async function findChannelByFrequency(
 
   if (!vtxDevice && !vrxDevice) return null;
 
-  // Získat všechny možné frekvence pro VTX
   const vtxOptions = vtxDevice
     ? vtxDevice.bands.flatMap((band) =>
         band.channels.map((ch) => ({
@@ -329,7 +324,6 @@ export async function findChannelByFrequency(
       )
     : [];
 
-  // Získat všechny možné frekvence pro VRX
   const vrxOptions = vrxDevice
     ? vrxDevice.bands.flatMap((band) =>
         band.channels.map((ch) => ({
@@ -344,7 +338,6 @@ export async function findChannelByFrequency(
       )
     : [];
 
-  // Hledat exact match
   const vtxMatch = vtxOptions.length > 0 ? findExactMatch(vtxOptions, frequency) : null;
   const vrxMatch = vrxOptions.length > 0 ? findExactMatch(vrxOptions, frequency) : null;
 
@@ -356,7 +349,6 @@ export async function findChannelByFrequency(
     };
   }
 
-  // Pokud není exact match, najít nearest
   const allOptions = [...vtxOptions, ...vrxOptions];
   const nearest = findNearestFrequencies(allOptions, frequency);
 
@@ -370,7 +362,7 @@ export async function findChannelByFrequency(
 // ========== FAVORITES ==========
 
 /**
- * Přidat oblíbenou konfiguraci
+ * Add favorite configuration
  */
 export async function addFavorite(
   db: Database,
@@ -395,14 +387,14 @@ export async function addFavorite(
 }
 
 /**
- * Získat všechny oblíbené
+ * Get all favorites
  */
 export async function getFavorites(db: Database) {
   return await db.select().from(favorites).orderBy(desc(favorites.createdAt));
 }
 
 /**
- * Smazat oblíbenou
+ * Delete favorite
  */
 export async function deleteFavorite(db: Database, favoriteId: number): Promise<void> {
   await db.delete(favorites).where(eq(favorites.id, favoriteId));
@@ -411,7 +403,7 @@ export async function deleteFavorite(db: Database, favoriteId: number): Promise<
 // ========== HISTORY ==========
 
 /**
- * Přidat do historie
+ * Add to history
  */
 export async function addToHistory(
   db: Database,
@@ -434,17 +426,16 @@ export async function addToHistory(
 }
 
 /**
- * Získat nedávnou historii
+ * Get recent history
  */
 export async function getHistory(db: Database, limit: number = 10) {
   return await db.select().from(history).orderBy(desc(history.usedAt)).limit(limit);
 }
 
 /**
- * Vyčistit starou historii (ponechat pouze posledních N záznamů)
+ * Clean old history (keep only last N entries)
  */
 export async function cleanOldHistory(db: Database, keepLast: number = 100): Promise<void> {
-  // Získat ID starých záznamů
   const oldEntries = await db
     .select({ id: history.id })
     .from(history)
@@ -454,7 +445,6 @@ export async function cleanOldHistory(db: Database, keepLast: number = 100): Pro
 
   if (oldEntries.length > 0) {
     const idsToDelete = oldEntries.map((e) => e.id);
-    // Smazat staré záznamy
     for (const id of idsToDelete) {
       await db.delete(history).where(eq(history.id, id));
     }

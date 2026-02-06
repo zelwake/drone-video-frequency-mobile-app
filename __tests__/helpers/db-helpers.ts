@@ -1,16 +1,16 @@
 /**
- * Database helpers pro testy
- * Poskytuje funkce pro setup in-memory SQLite databáze a seed testovacích dat
+ * Database helpers for tests
+ * Providers functions for setting up in-memory SQLite database and seeding test data
  */
 
-import { drizzle } from 'drizzle-orm/expo-sqlite';
-import * as SQLite from 'expo-sqlite';
-import migrations from '@/drizzle/migrations';
-import { migrate } from 'drizzle-orm/expo-sqlite/migrator';
 import { bandFrequencies, deviceBands, devices, frequencyBands } from '@/db/schema';
-import { TEST_BANDS } from './mock-data';
+import migrations from '@/drizzle/migrations';
 import type { CreateDeviceInput } from '@/types';
 import { eq } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/expo-sqlite';
+import { migrate } from 'drizzle-orm/expo-sqlite/migrator';
+import * as SQLite from 'expo-sqlite';
+import { TEST_BANDS } from './mock-data';
 
 type Database = ReturnType<typeof drizzle<Record<string, never>>>;
 
@@ -18,18 +18,16 @@ let testDbInstance: Database | null = null;
 let testSqliteInstance: SQLite.SQLiteDatabase | null = null;
 
 /**
- * Vytvoří a inicializuje in-memory testovací databázi
+ * Create and initialize in-memory testing database
  */
 export async function setupTestDatabase(): Promise<Database> {
-  // Každý test dostane unikátní in-memory databázi
+  // Every test will have fresh database
   const dbName = `:memory:`;
 
   try {
-    // Otevřít in-memory databázi
     testSqliteInstance = await SQLite.openDatabaseAsync(dbName);
     testDbInstance = drizzle(testSqliteInstance);
 
-    // Spustit migrace
     await migrate(testDbInstance, migrations);
 
     console.log('[Test DB] In-memory database created and migrated');
@@ -42,11 +40,10 @@ export async function setupTestDatabase(): Promise<Database> {
 }
 
 /**
- * Naplní databázi testovacími frekvenčními pásmy
+ * Seed database with testing frequency bands
  */
 export async function seedTestBands(db: Database): Promise<void> {
   for (const band of TEST_BANDS) {
-    // Vložit pásmo
     const [insertedBand] = await db
       .insert(frequencyBands)
       .values({
@@ -57,7 +54,6 @@ export async function seedTestBands(db: Database): Promise<void> {
       })
       .returning({ id: frequencyBands.id });
 
-    // Vložit frekvence pro toto pásmo
     const frequencyValues = band.frequencies.map((freq, index) => ({
       bandId: insertedBand.id,
       channelNumber: index + 1,
@@ -71,7 +67,7 @@ export async function seedTestBands(db: Database): Promise<void> {
 }
 
 /**
- * Vytvoří testovací zařízení
+ * Create testing device
  */
 export async function createTestDevice(db: Database, input: CreateDeviceInput): Promise<number> {
   const [device] = await db
@@ -82,7 +78,6 @@ export async function createTestDevice(db: Database, input: CreateDeviceInput): 
     })
     .returning({ id: devices.id });
 
-  // Přidat bands
   if (input.bandIds.length > 0) {
     const deviceBandValues = input.bandIds.map((bandId) => ({
       deviceId: device.id,
@@ -99,7 +94,7 @@ export async function createTestDevice(db: Database, input: CreateDeviceInput): 
 }
 
 /**
- * Vyčistí všechna data z databáze
+ * Clear database
  */
 export async function clearDatabase(db: Database): Promise<void> {
   await db.delete(deviceBands);
@@ -111,7 +106,7 @@ export async function clearDatabase(db: Database): Promise<void> {
 }
 
 /**
- * Zavře testovací databázi
+ * Close testing database
  */
 export async function closeTestDatabase(): Promise<void> {
   if (testSqliteInstance) {
@@ -123,7 +118,7 @@ export async function closeTestDatabase(): Promise<void> {
 }
 
 /**
- * Vrátí aktuální testovací DB instanci
+ * Return current database instance
  */
 export function getTestDb(): Database {
   if (!testDbInstance) {
@@ -133,21 +128,21 @@ export function getTestDb(): Database {
 }
 
 /**
- * Vrátí všechna pásma z testovací databáze
+ * Returns all mocked bands
  */
 export async function getTestBands(db: Database) {
   return await db.select().from(frequencyBands);
 }
 
 /**
- * Vrátí všechna zařízení z testovací databáze
+ * Returns all devices
  */
 export async function getTestDevices(db: Database) {
   return await db.select().from(devices);
 }
 
 /**
- * Najde pásmo podle znaku (např. 'F', 'R')
+ * Find band by band sign symbol
  */
 export async function findBandBySign(db: Database, sign: string) {
   const [band] = await db.select().from(frequencyBands).where(eq(frequencyBands.bandSign, sign));

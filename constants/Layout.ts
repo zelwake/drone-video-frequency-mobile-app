@@ -1,5 +1,5 @@
 /**
- * Layout constants pro spacing, velikosti, atd.
+ * Layout constants for spacing, sizes, etc.
  */
 const Layout = {
   spacing: {
@@ -29,7 +29,7 @@ const Layout = {
     lg: 32,
     xl: 48,
   },
-  minTouchSize: 44, // Minimální velikost pro touch target (iOS HIG)
+  minTouchSize: 44, // Minimum size for touch target (iOS HIG)
 };
 
 export default Layout;

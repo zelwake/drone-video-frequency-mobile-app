@@ -5,15 +5,15 @@ import { bandFrequencies, frequencyBands } from './schema';
 import { OFFICIAL_BANDS } from './seedData';
 
 /**
- * Naplní databázi oficiálními frekvenčními pásmy při prvním spuštění
+ * Seeds database with official frequency bands on first launch
  * @param db Drizzle database instance
- * @returns true pokud byl seed úspěšný, false pokud data už existují
+ * @returns true if seed was successful, false if data already exists
  */
 export async function seedOfficialBands(
   db: ReturnType<typeof drizzle<Record<string, never>>>
 ): Promise<boolean> {
   try {
-    // Zkontrolovat jestli už existují oficiální pásma
+    // Check if official bands already exist
     const existingBands = await db.select().from(frequencyBands).limit(1);
 
     if (existingBands.length > 0) {
@@ -23,9 +23,7 @@ export async function seedOfficialBands(
 
     logger.debug('[Seed] Seeding official bands...');
 
-    // Naplnit pásma a jejich frekvence
     for (const band of OFFICIAL_BANDS) {
-      // Vložit pásmo
       const [insertedBand] = await db
         .insert(frequencyBands)
         .values({
@@ -36,7 +34,6 @@ export async function seedOfficialBands(
         })
         .returning({ id: frequencyBands.id });
 
-      // Vložit frekvence pro toto pásmo (kanály 1-8)
       const frequencyValues = band.frequencies.map((freq, index) => ({
         bandId: insertedBand.id,
         channelNumber: index + 1, // 1-based indexing
@@ -59,7 +56,7 @@ export async function seedOfficialBands(
 }
 
 /**
- * Pomocná funkce pro získání počtu oficiálních pásem
+ * Helper function to get count of official bands
  */
 export async function getOfficialBandsCount(
   db: ReturnType<typeof drizzle<Record<string, never>>>

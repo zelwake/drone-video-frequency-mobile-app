@@ -1,13 +1,13 @@
 /**
  * Jest setup file
- * Global mocks a konfigurace pro testy
+ * Global mocks and configurations for tests
  */
 
 import '@testing-library/react-native';
 import { Alert } from 'react-native';
 
 // ========== Mock Expo SQLite ==========
-// Mock implementace pro in-memory databázi v testech
+// Implementation mock for in-memory database in tests
 const mockSQLiteDatabase = {
   execAsync: jest.fn(() => Promise.resolve({ rows: [] })),
   runAsync: jest.fn(() => Promise.resolve({ lastInsertRowId: 1, changes: 1 })),
@@ -39,8 +39,8 @@ jest.mock('expo-sqlite/kv-store', () => ({
 
 // ========== Mock Alert ==========
 jest.spyOn(Alert, 'alert').mockImplementation((title, message, buttons, options) => {
-  // Pro testování můžeme rovnou zavolat onPress callback prvního tlačítka
-  // Test může Alert.alert mockovat specifičtěji podle potřeby
+  // We can immediatelly call onPress callback of first button
+  // Test can mock Alert.alert on its own if this is not enough
   console.log(`[Mock Alert] ${title}: ${message}`);
 });
 
@@ -82,6 +82,7 @@ jest.mock('expo-font', () => ({
 
 // ========== Mock @expo/vector-icons ==========
 jest.mock('@expo/vector-icons', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { Text } = require('react-native');
   return {
     Ionicons: Text,
@@ -90,10 +91,9 @@ jest.mock('@expo/vector-icons', () => {
   };
 });
 
-// ========== Globální cleanup ==========
+// ========== Global cleanup ==========
 afterEach(() => {
   jest.clearAllMocks();
 });
 
-// Export mock router pro použití v testech
 export { mockRouter };

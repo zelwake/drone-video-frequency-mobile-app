@@ -1,19 +1,19 @@
 # DroneFrequency - Developer Documentation
 
-Dokumentace pro vývojáře pracující na aplikaci DroneFrequency.
+Documentation for developers working on the DroneFrequency application.
 
-## Obsah
+## Table of Contents
 
-1. [Architektura](#architektura)
-2. [Databáze](#databáze)
+1. [Architecture](#architecture)
+2. [Database](#database)
 3. [API Reference](#api-reference)
-4. [Komponenty](#komponenty)
+4. [Components](#components)
 5. [Testing](#testing)
 6. [Deployment](#deployment)
 
 ---
 
-## Architektura
+## Architecture
 
 ### Tech Stack
 
@@ -24,24 +24,24 @@ Dokumentace pro vývojáře pracující na aplikaci DroneFrequency.
 - **TypeScript**: 5.9.2 (strict mode)
 - **Package Manager**: pnpm
 
-### Struktura projektu
+### Project Structure
 
 ```
 DroneFrequency/
 ├── app/                    # Expo Router file-based routing
 │   ├── (tabs)/            # Bottom tabs navigation
-│   │   ├── index.tsx      # Home - Hlavní průvodce
-│   │   ├── devices/       # Správa zařízení
-│   │   ├── spectrum.tsx   # Vizualizace spektra
-│   │   ├── find.tsx       # Najdi volný kanál
-│   │   └── settings.tsx   # Nastavení
+│   │   ├── index.tsx      # Home - Main guide
+│   │   ├── devices/       # Device management
+│   │   ├── spectrum.tsx   # Spectrum visualization
+│   │   ├── find.tsx       # Find free channel
+│   │   └── settings.tsx   # Settings
 │   └── _layout.tsx        # Root layout (DB init)
-├── components/            # React komponenty
+├── components/            # React components
 ├── db/                    # Database layer
 │   ├── schema.ts          # Drizzle ORM schema
 │   ├── queries.ts         # Database queries
 │   ├── seedData.ts        # Official bands data
-│   └── seed.ts            # Seed funkcefunctions
+│   └── seed.ts            # Seed functions
 ├── hooks/                 # Custom React hooks
 ├── utils/                 # Utility functions
 ├── types/                 # TypeScript types
@@ -52,15 +52,15 @@ DroneFrequency/
 
 ---
 
-## Databáze
+## Database
 
 ### Schema
 
-Aplikace používá 6 hlavních tabulek:
+The application uses 6 main tables:
 
 #### 1. `frequency_band`
 
-Frekvenční pásma (oficiální i custom).
+Frequency bands (official and custom).
 
 ```typescript
 {
@@ -68,13 +68,13 @@ Frekvenční pásma (oficiální i custom).
   band_sign: string; // "A", "B", "R", "F"...
   name: string; // "Boscam A", "Race Band"
   short_name: string | null; // "Boscam", "Race"
-  is_custom: boolean; // false = oficiální, true = uživatelské
+  is_custom: boolean; // false = official, true = user-defined
 }
 ```
 
 #### 2. `band_frequency`
 
-Frekvence pro každý kanál v pásmu (1-8 kanálů).
+Frequencies for each channel in a band (1-8 channels).
 
 ```typescript
 {
@@ -88,7 +88,7 @@ Frekvence pro každý kanál v pásmu (1-8 kanálů).
 
 #### 3. `device`
 
-VTX/VRX zařízení (vždy uživatelská).
+VTX/VRX devices (always user-defined).
 
 ```typescript
 {
@@ -101,13 +101,13 @@ VTX/VRX zařízení (vždy uživatelská).
 
 #### 4. `device_band`
 
-Mapování pásem na zařízení.
+Band mapping to devices.
 
 ```typescript
 {
   device_id: number (FK -> device.id)
   band_id: number (FK -> frequency_band.id)
-  band_label: string            // Label na daném zařízení ("A", "B", "1"...)
+  band_label: string            // Label on the device ("A", "B", "1"...)
 
   PK: (device_id, band_id)
 }
@@ -115,7 +115,7 @@ Mapování pásem na zařízení.
 
 #### 5. `favorite`
 
-Oblíbené konfigurace.
+Favorite configurations.
 
 ```typescript
 {
@@ -130,7 +130,7 @@ Oblíbené konfigurace.
 
 #### 6. `history`
 
-Historie vyhledávání.
+Search history.
 
 ```typescript
 {
@@ -142,9 +142,9 @@ Historie vyhledávání.
 }
 ```
 
-### Oficiální pásma
+### Official Bands
 
-Při prvním spuštění se naplní 10 oficiálních pásem:
+On first launch, 10 official bands are seeded:
 
 | Sign | Name         | Frequencies (MHz)                              |
 | ---- | ------------ | ---------------------------------------------- |
@@ -159,13 +159,13 @@ Při prvním spuštění se naplní 10 oficiálních pásem:
 | L    | Low Band     | 5333, 5373, 5413, 5453, 5493, 5533, 5573, 5613 |
 | H    | High Band    | 5653, 5693, 5733, 5773, 5813, 5853, 5893, 5933 |
 
-### Migrace
+### Migrations
 
 ```bash
-# Vygenerovat novou migraci po změně schema.ts
+# Generate new migration after changing schema.ts
 npx drizzle-kit generate
 
-# Zobrazit Drizzle Studio (GUI pro databázi)
+# Open Drizzle Studio (database GUI)
 npx drizzle-kit studio
 ```
 
@@ -178,42 +178,42 @@ npx drizzle-kit studio
 #### Bands
 
 ```typescript
-// Získat všechna pásma včetně frekvencí
+// Get all bands including frequencies
 getAllBands(db: Database): Promise<BandWithFrequencies[]>
 
-// Získat pouze oficiální pásma
+// Get only official bands
 getOfficialBands(db: Database): Promise<BandWithFrequencies[]>
 
-// Vytvořit custom pásmo
+// Create custom band
 createCustomBand(db: Database, data: CreateCustomBandData): Promise<number>
 
-// Smazat custom pásmo (nelze smazat oficiální!)
+// Delete custom band (cannot delete official bands!)
 deleteCustomBand(db: Database, bandId: number): Promise<boolean>
 ```
 
 #### Devices
 
 ```typescript
-// Získat zařízení podle typu
+// Get devices by type
 getDevicesByType(db: Database, type?: 'VTX' | 'VRX'): Promise<DeviceWithBands[]>
 
-// Získat jedno zařízení
+// Get single device
 getDevice(db: Database, deviceId: number): Promise<DeviceWithBands | null>
 
-// Vytvořit zařízení
+// Create device
 createDevice(db: Database, data: CreateDeviceData): Promise<number>
 
-// Aktualizovat zařízení
+// Update device
 updateDevice(db: Database, deviceId: number, data: Partial<CreateDeviceData>): Promise<void>
 
-// Smazat zařízení
+// Delete device
 deleteDevice(db: Database, deviceId: number): Promise<void>
 ```
 
 #### Frequency Lookup
 
 ```typescript
-// Hlavní vyhledávací funkce
+// Main search function
 findChannelByFrequency(
   db: Database,
   vtxDeviceId: number,
@@ -238,8 +238,8 @@ Nearest frequencies:
 
 ```typescript
 {
-  lower: NearestFrequency[],  // Frekvence nižší než hledaná
-  upper: NearestFrequency[],  // Frekvence vyšší než hledaná
+  lower: NearestFrequency[],  // Frequencies lower than searched
+  upper: NearestFrequency[],  // Frequencies higher than searched
   exact: false
 }
 ```
@@ -247,56 +247,56 @@ Nearest frequencies:
 #### Favorites
 
 ```typescript
-// Přidat oblíbenou
+// Add favorite
 addFavorite(db: Database, data: {...}): Promise<number>
 
-// Získat všechny oblíbené
+// Get all favorites
 getFavorites(db: Database): Promise<Favorite[]>
 
-// Smazat oblíbenou
+// Delete favorite
 deleteFavorite(db: Database, favoriteId: number): Promise<void>
 ```
 
 #### History
 
 ```typescript
-// Přidat do historie
+// Add to history
 addToHistory(db: Database, data: {...}): Promise<number>
 
-// Získat nedávnou historii
+// Get recent history
 getHistory(db: Database, limit?: number): Promise<History[]>
 
-// Vyčistit starou historii
+// Clean old history
 cleanOldHistory(db: Database, keepLast?: number): Promise<void>
 ```
 
 ### Utility Functions (`utils/frequency.ts`)
 
 ```typescript
-// Najít přesnou shodu frekvence
+// Find exact frequency match
 findExactMatch(options: {...}[], targetFrequency: number): FrequencyMatch | null
 
-// Najít nejbližší frekvence
+// Find nearest frequencies
 findNearestFrequencies(options: {...}[], targetFrequency: number): {
   lower: NearestFrequency[],
   upper: NearestFrequency[]
 }
 
-// Vypočítat interference score
+// Calculate interference score
 calculateInterferenceScore(targetFrequency: number, usedFrequencies: number[]): number
 
-// Validovat frekvenci
+// Validate frequency
 isValidFrequency(frequency: number): boolean
 
-// Formátovat frekvenci
+// Format frequency
 formatFrequency(frequency: number): string
 ```
 
 ---
 
-## Komponenty
+## Components
 
-### Základní UI komponenty (`components/ui/`)
+### Base UI Components (`components/ui/`)
 
 ```typescript
 // Button
@@ -329,7 +329,7 @@ formatFrequency(frequency: number): string
 />
 ```
 
-### Doménové komponenty
+### Domain Components
 
 ```typescript
 // Device Selector
@@ -369,28 +369,28 @@ formatFrequency(frequency: number): string
 
 ### Unit Tests
 
-Testy jsou v `__tests__/` složce.
+Tests are located in `__tests__/` folder.
 
 ```bash
-# Spustit všechny testy
+# Run all tests
 pnpm test
 
-# Spustit testy v watch módu
+# Run tests in watch mode
 pnpm test:watch
 
-# Spustit konkrétní test
+# Run specific test
 pnpm test frequency.test.ts
 ```
 
 ### Test Coverage
 
-Aktuální pokrytí:
+Current coverage:
 
 - ✅ `utils/frequency.ts` - 100%
 - ⏳ `db/queries.ts` - TODO
 - ⏳ Components - TODO
 
-### Psaní testů
+### Writing Tests
 
 ```typescript
 // __tests__/example.test.ts
@@ -409,15 +409,15 @@ describe('Function Name', () => {
 });
 ```
 
-### Manuální testování
+### Manual Testing
 
-Viz [MANUAL_TESTING.md](./MANUAL_TESTING.md) pro kompletní test plány.
+See [MANUAL_TESTING.md](./MANUAL_TESTING.md) for complete test plans.
 
 ---
 
 ## Deployment
 
-### Build pro Android
+### Android Build
 
 ```bash
 # Development build
@@ -427,7 +427,7 @@ eas build --platform android --profile development
 eas build --platform android --profile production
 ```
 
-### Build pro iOS
+### iOS Build
 
 ```bash
 # Development build
@@ -437,10 +437,10 @@ eas build --platform ios --profile development
 eas build --platform ios --profile production
 ```
 
-### Lokální development
+### Local Development
 
 ```bash
-# Spustit Metro bundler
+# Start Metro bundler
 pnpm start
 
 # Android
@@ -449,7 +449,7 @@ pnpm android
 # iOS
 pnpm ios
 
-# Web (pro rychlé prototypování)
+# Web (for quick prototyping)
 pnpm web
 ```
 
@@ -459,69 +459,69 @@ pnpm web
 
 ### TypeScript
 
-- ✅ Používat strict mode
-- ✅ Definovat typy pro všechny parametry a return values
-- ✅ Používat `interface` pro objekty, `type` pro unions
-- ✅ Vyhýbat se `any` - použít `unknown` pokud typ není znám
+- ✅ Use strict mode
+- ✅ Define types for all parameters and return values
+- ✅ Use `interface` for objects, `type` for unions
+- ✅ Avoid `any` - use `unknown` if type is truly unknown
 
 ### React Hooks
 
-- ✅ Vždy specifikovat dependency array
-- ✅ Používat `useCallback` pro funkce předávané do child komponent
-- ✅ Používat `useMemo` pro náročné výpočty
-- ✅ Custom hooks začínají `use...`
+- ✅ Always specify dependency array
+- ✅ Use `useCallback` for functions passed to child components
+- ✅ Use `useMemo` for expensive computations
+- ✅ Custom hooks start with `use...`
 
 ### Database
 
-- ✅ Vždy používat transactions pro více operací
-- ✅ Indexovat sloupce které se často vyhledávají
-- ✅ Používat foreign keys pro data integrity
-- ✅ Čistit starou historii pravidelně
+- ✅ Always use transactions for multiple operations
+- ✅ Index columns that are frequently searched
+- ✅ Use foreign keys for data integrity
+- ✅ Clean old history regularly
 
 ### Performance
 
-- ✅ Používat `FlatList` místo `ScrollView` pro dlouhé seznamy
-- ✅ Implementovat `React.memo` pro komponenty které se často re-renderují
-- ✅ Lazy load obrazovky pomocí `React.lazy` a `Suspense`
-- ✅ Debounce user input (např. search)
+- ✅ Use `FlatList` instead of `ScrollView` for long lists
+- ✅ Implement `React.memo` for frequently re-rendering components
+- ✅ Lazy load screens using `React.lazy` and `Suspense`
+- ✅ Debounce user input (e.g., search)
 
 ### Security
 
-- ✅ Neukládat citlivá data v plain text
-- ✅ Validovat všechny user inputy
-- ✅ Používat prepared statements (Drizzle ORM je dělá automaticky)
+- ✅ Don't store sensitive data in plain text
+- ✅ Validate all user inputs
+- ✅ Use prepared statements (Drizzle ORM does this automatically)
 
 ---
 
 ## Troubleshooting
 
-### Problém: Migrace selhávají
+### Problem: Migrations fail
 
-**Řešení:**
+**Solution:**
 
 ```bash
-# Smazat databázi a začít znovu
+# Delete database and start fresh
 rm -rf .expo
 pnpm start --clear
 ```
 
-### Problém: TypeScript chyby po update
+### Problem: TypeScript errors after update
 
-**Řešení:**
+**Solution:**
 
 ```bash
-# Vyčistit cache
+# Clear cache
 pnpm install
 rm -rf node_modules .expo
 pnpm install
 ```
 
-### Problém: Metro bundler nepickuje změny
+### Problem: Metro bundler doesn't pick up changes
 
-**Řešení:**
+**Solution:**
 
 ```bash
-# Restart s clear cache
+# Restart with clear cache
 pnpm start --clear
 ```
 
@@ -533,11 +533,11 @@ pnpm start --clear
 
 **Added:**
 
-- ✅ Databázové schéma s 6 tabulkami
-- ✅ Seed oficiálních 10 FPV pásem
+- ✅ Database schema with 6 tables
+- ✅ Seed of official 10 FPV bands
 - ✅ Core business logic (queries, utils)
-- ✅ Unit tests pro frequency utilities
-- ✅ Dokumentace a test plány
+- ✅ Unit tests for frequency utilities
+- ✅ Documentation and test plans
 
 **TODO:**
 
@@ -551,12 +551,12 @@ pnpm start --clear
 
 ## Contributing
 
-1. Vytvořte feature branch z `main`
-2. Implementujte změny
-3. Napište testy
-4. Spusťte `pnpm lint` a `pnpm test`
-5. Vytvořte commit s popisnou zprávou
-6. Push a vytvořte pull request
+1. Create feature branch from `main`
+2. Implement changes
+3. Write tests
+4. Run `pnpm lint` and `pnpm test`
+5. Create commit with descriptive message
+6. Push and create pull request
 
 ### Commit Message Format
 
@@ -568,12 +568,12 @@ pnpm start --clear
 
 Types:
 
-- `feat`: Nová funkce
-- `fix`: Oprava bugu
-- `docs`: Dokumentace
-- `test`: Testy
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation
+- `test`: Tests
 - `refactor`: Refactoring
-- `chore`: Build, dependencies, atd.
+- `chore`: Build, dependencies, etc.
 
 ---
 

@@ -3,7 +3,7 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { useMemo } from 'react';
 
 /**
- * Hook pro získání Drizzle database instance
+ * Hook to get Drizzle database instance
  */
 export function useDatabase() {
   const sqlite = useSQLiteContext();

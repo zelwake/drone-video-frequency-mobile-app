@@ -1,23 +1,23 @@
 # DroneFrequency 🚁
 
-React Native aplikace pro snadné nastavování VTX/VRX kanálů na dronech a přijímačích.
+React Native application for easy VTX/VRX channel setup on drones and receivers.
 
-## ✨ Funkce
+## ✨ Features
 
-- 📡 **Hlavní průvodce**: Výběr VTX + VRX zařízení → zadání frekvence → zobrazení nastavení (Band + Channel)
-- 🔧 **Správa zařízení**: Přidávání vlastních VTX/VRX zařízení s mapováním pásem
-- 📊 **Vizualizace spektra**: Graf frekvencí + mřížka všech kanálů
-- 🔍 **Hledání volných kanálů**: Detekce konfliktů a doporučení volných frekvencí
-- ⭐ **Oblíbené**: Rychlý přístup k často používaným konfiguracím
-- 📜 **Historie**: Automatické zaznamenávání posledních vyhledání
+- 📡 **Main Guide**: Select VTX + VRX devices → enter frequency → display settings (Band + Channel)
+- 🔧 **Device Management**: Add custom VTX/VRX devices with band mapping
+- 📊 **Spectrum Visualization**: Frequency chart + channel grid
+- 🔍 **Find Free Channels**: Conflict detection and free frequency recommendations
+- ⭐ **Favorites**: Quick access to frequently used configurations
+- 📜 **History**: Automatic recording of recent searches
 
 ## 🚀 Quick Start
 
 ```bash
-# Instalace závislostí
+# Install dependencies
 pnpm install
 
-# Spuštění development serveru
+# Start development server
 pnpm start
 
 # Android
@@ -27,12 +27,12 @@ pnpm android
 pnpm ios
 ```
 
-## 📋 Požadavky
+## 📋 Requirements
 
 - Node.js 18+
 - pnpm 10+
 - Expo CLI
-- Android Studio (pro Android) nebo Xcode (pro iOS)
+- Android Studio (for Android) or Xcode (for iOS)
 
 ## 🏗️ Tech Stack
 
@@ -43,28 +43,28 @@ pnpm ios
 - **TypeScript**: 5.9.2 (strict mode)
 - **Testing**: Jest + React Testing Library
 
-## 📚 Dokumentace
+## 📚 Documentation
 
-- [Developer Documentation](./docs/README.md) - Kompletní dokumentace pro vývojáře
-- [Manual Testing Plan](./docs/MANUAL_TESTING.md) - Test plány pro manuální testování
-- [Agents Guidelines](./AGENTS.md) - Pokyny pro AI coding agenty
+- [Developer Documentation](./docs/README.md) - Complete developer documentation
+- [Manual Testing Plan](./docs/MANUAL_TESTING.md) - Test plans for manual testing
+- [Agents Guidelines](./AGENTS.md) - Guidelines for AI coding agents
 
 ## 🧪 Testing
 
 ```bash
-# Spustit všechny testy
+# Run all tests
 pnpm test
 
-# Testy v watch módu
+# Tests in watch mode
 pnpm test:watch
 
 # Lint
 pnpm lint
 ```
 
-## 📖 Oficiální pásma
+## 📖 Official Bands
 
-Aplikace obsahuje 10 předpřipravených FPV pásem:
+The application includes 10 pre-configured FPV bands:
 
 - **A** - Boscam A
 - **B** - Boscam B
@@ -77,47 +77,47 @@ Aplikace obsahuje 10 předpřipravených FPV pásem:
 - **L** - Low Band
 - **H** - High Band
 
-## 🗂️ Struktura projektu
+## 🗂️ Project Structure
 
 ```
 DroneFrequency/
 ├── app/              # Expo Router screens
-├── components/       # React komponenty
-├── db/               # Databáze (schema, queries, seed)
+├── components/       # React components
+├── db/               # Database (schema, queries, seed)
 ├── hooks/            # Custom React hooks
-├── utils/            # Utility funkce
+├── utils/            # Utility functions
 ├── types/            # TypeScript types
-├── docs/             # Dokumentace
-└── __tests__/        # Testy
+├── docs/             # Documentation
+└── __tests__/        # Tests
 ```
 
-## 🔄 Databáze
+## 🔄 Database
 
-Aplikace používá SQLite s Drizzle ORM. Při prvním spuštění se automaticky:
+The application uses SQLite with Drizzle ORM. On first launch, it automatically:
 
-1. Vytvoří databáze `frequencies.db`
-2. Spustí migrace
-3. Naplní oficiálními FPV pásmy
+1. Creates `frequencies.db` database
+2. Runs migrations
+3. Seeds with official FPV bands
 
 ```bash
-# Vygenerovat novou migraci
+# Generate new migration
 npx drizzle-kit generate
 
-# Zobrazit Drizzle Studio
+# Open Drizzle Studio
 npx drizzle-kit studio
 ```
 
-## 🎨 Screenshoty
+## 🎨 Screenshots
 
-_TODO: Přidat screenshoty po dokončení UI_
+_TODO: Add screenshots after UI completion_
 
 ## 🤝 Contributing
 
 1. Fork repository
-2. Vytvořte feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit změny (`git commit -m 'feat: add amazing feature'`)
-4. Push do branch (`git push origin feature/amazing-feature`)
-5. Otevřete Pull Request
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
 
 ## 📝 License
 
@@ -125,104 +125,104 @@ MIT
 
 ## 🙏 Acknowledgments
 
-- Expo team za skvělý framework
-- FPV komunita za data oficiálních pásem
+- Expo team for the amazing framework
+- FPV community for official band data
 - Drizzle ORM team
 
 ---
 
-## 🎯 Stav projektu
+## 🎯 Project Status
 
-**Verze**: 1.0.0 (MVP in development)  
-**Poslední update**: 2026-01-25
+**Version**: 1.0.0 (MVP in development)  
+**Last Update**: 2026-01-25
 
-### ✅ Hotové funkce (MVP Core)
+### ✅ Completed Features (MVP Core)
 
 - **Database & Schema**
-  - ✅ SQLite databáze s Drizzle ORM
-  - ✅ Migrace a seed data (10 oficiálních FPV pásem)
-  - ✅ Schema pro zařízení, pásma, frekvence, historii
+  - ✅ SQLite database with Drizzle ORM
+  - ✅ Migrations and seed data (10 official FPV bands)
+  - ✅ Schema for devices, bands, frequencies, history
 
 - **Device Management**
-  - ✅ Přidávání/úprava/mazání VTX/VRX zařízení
-  - ✅ Mapování pásem k zařízením
-  - ✅ Vlastní labely pro pásma (band aliases)
-  - ✅ Zobrazení frekvencí u každého pásma
+  - ✅ Add/edit/delete VTX/VRX devices
+  - ✅ Band mapping to devices
+  - ✅ Custom band labels (band aliases)
+  - ✅ Display frequencies for each band
 
 - **Frequency Lookup**
-  - ✅ Hlavní vyhledávací obrazovka
-  - ✅ Výběr VTX a/nebo VRX zařízení
-  - ✅ Zadání frekvence a nalezení kanálu
-  - ✅ Zobrazení nejbližších frekvencí při nepřesné shodě
-  - ✅ Uložení posledního výběru
-  - ✅ Zobrazení vlastních band labelů ve výsledcích
-  - ✅ Historie vyhledávání (ukládání do DB)
+  - ✅ Main search screen
+  - ✅ Select VTX and/or VRX devices
+  - ✅ Enter frequency and find channel
+  - ✅ Display nearest frequencies on inexact match
+  - ✅ Save last selection
+  - ✅ Display custom band labels in results
+  - ✅ Search history (save to DB)
 
 - **UI/UX**
-  - ✅ Light/Dark mode s přepínačem
-  - ✅ Tab navigace (Home, Devices, Favorites, Settings)
-  - ✅ Vertikální BandSelector s checkboxy a inline editorem
-  - ✅ Responzivní komponenty (Input, Button, Dropdown, Card)
-  - ✅ Edge-to-edge podpora (Android)
+  - ✅ Light/Dark mode with toggle
+  - ✅ Tab navigation (Home, Devices, Favorites, Settings)
+  - ✅ Vertical BandSelector with checkboxes and inline editor
+  - ✅ Responsive components (Input, Button, Dropdown, Card)
+  - ✅ Edge-to-edge support (Android)
 
 - **Code Quality**
   - ✅ TypeScript strict mode
-  - ✅ ESLint + Prettier konfigurace
+  - ✅ ESLint + Prettier configuration
   - ✅ Type-safe routing (Expo Router)
-  - ✅ TanStack Query pro state management
+  - ✅ TanStack Query for state management
 
-### 🚧 Rozpracované funkce
+### 🚧 In Progress Features
 
 - **Favorites**
-  - ⏳ UI připraveno, funkčnost zatím placeholder
-  - ⏳ Databázová struktura existuje, chybí implementace
+  - ⏳ UI ready, functionality placeholder
+  - ⏳ Database structure exists, implementation pending
 
 - **Settings**
-  - ⏳ Základní obrazovka s theme switcherem
-  - ⏳ Chybí další nastavení (jednotky, jazyk, atd.)
+  - ⏳ Basic screen with theme switcher
+  - ⏳ Additional settings needed (units, language, etc.)
 
 ### 📋 TODO - Core Features
 
-- [ ] **Spektrum vizualizace**
-  - [ ] Graf zobrazující všechny frekvence
-  - [ ] Mřížka kanálů s označením obsazených
-  - [ ] Vizuální detekce konfliktů
+- [ ] **Spectrum Visualization**
+  - [ ] Chart displaying all frequencies
+  - [ ] Channel grid with occupied channels marked
+  - [ ] Visual conflict detection
 
-- [ ] **Hledání volných kanálů**
-  - [ ] Algoritmus pro detekci konfliktů
-  - [ ] Doporučení volných frekvencí
-  - [ ] Zobrazení vzdálenosti mezi kanály
+- [ ] **Find Free Channels**
+  - [ ] Algorithm for conflict detection
+  - [ ] Free frequency recommendations
+  - [ ] Display distance between channels
 
-- [ ] **Favorites (dokončení)**
-  - [ ] Implementace CRUD operací
-  - [ ] Rychlý přístup z hlavní obrazovky
-  - [ ] Sdílení/export oblíbených konfigurací
+- [ ] **Favorites (completion)**
+  - [ ] Implement CRUD operations
+  - [ ] Quick access from main screen
+  - [ ] Share/export favorite configurations
 
-- [ ] **Historie (rozšíření)**
-  - [ ] UI pro zobrazení historie
-  - [ ] Filtrování a vyhledávání
-  - [ ] Možnost obnovit předchozí vyhledání
+- [ ] **History (expansion)**
+  - [ ] UI for displaying history
+  - [ ] Filtering and search
+  - [ ] Ability to restore previous searches
 
 - [ ] **Custom Bands**
-  - [ ] UI pro vytváření vlastních pásem
-  - [ ] Validace frekvencí (8 kanálů max)
-  - [ ] Import/export vlastních pásem
+  - [ ] UI for creating custom bands
+  - [ ] Frequency validation (8 channels max)
+  - [ ] Import/export custom bands
 
 ### 🎨 Nice to Have
 
-- [ ] **Reverse lookup** - Zadání frekvence → okamžité zobrazení kanálu bez výběru zařízení
-- [ ] **Partial device selection** - Indikátor když kanál lze nastavit jen na jednom ze zařízení (VTX nebo VRX)
-- [ ] **Multi-device comparison** - Porovnání frekvencí mezi více zařízeními najednou
-- [ ] **Export/Import** - Backup/restore všech dat (zařízení, oblíbené, vlastní pásma)
-- [ ] **QR Code** - Sdílení konfigurace přes QR kód
-- [ ] **Voice input** - Hlasové zadání frekvence
-- [ ] **Widgets** - Home screen widget pro rychlý přístup
-- [ ] **Apple Watch/WearOS** - Companion aplikace
-- [ ] **Offline maps** - Mapa FPV pilotů poblíž s jejich frekvencemi
+- [ ] **Reverse lookup** - Enter frequency → instant channel display without device selection
+- [ ] **Partial device selection** - Indicator when channel can only be set on one device (VTX or VRX)
+- [ ] **Multi-device comparison** - Compare frequencies between multiple devices at once
+- [ ] **Export/Import** - Backup/restore all data (devices, favorites, custom bands)
+- [ ] **QR Code** - Share configuration via QR code
+- [ ] **Voice input** - Voice entry for frequency
+- [ ] **Widgets** - Home screen widget for quick access
+- [ ] **Apple Watch/WearOS** - Companion application
+- [ ] **Offline maps** - Map of nearby FPV pilots with their frequencies
 
-### 🐛 Známé problémy
+### 🐛 Known Issues
 
-_Zatím žádné reportované_
+_None reported yet_
 
 ---
 

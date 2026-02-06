@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { integer, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
-// Frekvenční pásma (A, B, E, F, R, D, U, O, L, H)
+// Frequency bands (A, B, E, F, R, D, U, O, L, H)
 export const frequencyBands = sqliteTable('frequency_band', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   bandSign: text('band_sign').notNull(),
@@ -10,7 +10,7 @@ export const frequencyBands = sqliteTable('frequency_band', {
   isCustom: integer('is_custom', { mode: 'boolean' }).notNull().default(false),
 });
 
-// Frekvence pro každé pásmo (1-8 kanálů)
+// Frequencies for each band (1-8 channels)
 export const bandFrequencies = sqliteTable(
   'band_frequency',
   {
@@ -23,7 +23,7 @@ export const bandFrequencies = sqliteTable(
   (table) => [primaryKey({ columns: [table.bandId, table.channelNumber] })]
 );
 
-// Zařízení (VTX/VRX) - vždy uživatelská
+// Devices (VTX/VRX) - always user-defined
 export const devices = sqliteTable('device', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull(),
@@ -33,7 +33,7 @@ export const devices = sqliteTable('device', {
     .default(sql`(strftime('%s', 'now'))`),
 });
 
-// Mapování zařízení na pásma
+// Device band mapping
 export const deviceBands = sqliteTable(
   'device_band',
   {
@@ -48,7 +48,7 @@ export const deviceBands = sqliteTable(
   (table) => [primaryKey({ columns: [table.deviceId, table.bandId] })]
 );
 
-// Oblíbené konfigurace
+// Favorite configurations
 export const favorites = sqliteTable('favorite', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name'),
@@ -64,7 +64,7 @@ export const favorites = sqliteTable('favorite', {
     .default(sql`(strftime('%s', 'now'))`),
 });
 
-// Historie použití
+// Usage history
 export const history = sqliteTable('history', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   vtxDeviceId: integer('vtx_device_id').references(() => devices.id, {
@@ -79,7 +79,7 @@ export const history = sqliteTable('history', {
     .default(sql`(strftime('%s', 'now'))`),
 });
 
-// Export types pro použití v aplikaci
+// Export types
 export type FrequencyBand = typeof frequencyBands.$inferSelect;
 export type BandFrequency = typeof bandFrequencies.$inferSelect;
 export type Device = typeof devices.$inferSelect;

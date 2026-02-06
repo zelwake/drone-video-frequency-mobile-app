@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useDatabase } from './useDatabase';
 
 /**
- * Hook pro získání všech pásem
+ * Hook to get all bands
  */
 export function useBands() {
   const db = useDatabase();
@@ -15,7 +15,7 @@ export function useBands() {
 }
 
 /**
- * Hook pro získání pouze oficiálních pásem
+ * Hook to get only official bands
  */
 export function useOfficialBands() {
   const db = useDatabase();

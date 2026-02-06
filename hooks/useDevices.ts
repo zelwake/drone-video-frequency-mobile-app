@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDatabase } from './useDatabase';
 
 /**
- * Hook pro získání všech zařízení podle typu
+ * Hook to get all devices by type
  */
 export function useDevices(type?: DeviceType) {
   const db = useDatabase();
@@ -16,7 +16,7 @@ export function useDevices(type?: DeviceType) {
 }
 
 /**
- * Hook pro získání jednoho zařízení
+ * Hook to get single device
  */
 export function useDevice(deviceId: number | null) {
   const db = useDatabase();
@@ -29,7 +29,7 @@ export function useDevice(deviceId: number | null) {
 }
 
 /**
- * Hook pro získání všech pásem
+ * Hook to get all bands
  */
 export function useGetAllBands() {
   const db = useDatabase();
@@ -41,7 +41,7 @@ export function useGetAllBands() {
 }
 
 /**
- * Hook pro vytvoření zařízení
+ * Hook to create device
  */
 export function useCreateDevice() {
   const db = useDatabase();
@@ -77,7 +77,7 @@ export function useCreateDevice() {
 }
 
 /**
- * Hook pro aktualizaci zařízení
+ * Hook to update device
  */
 export function useUpdateDevice() {
   const db = useDatabase();
@@ -122,7 +122,7 @@ export function useUpdateDevice() {
 }
 
 /**
- * Hook pro smazání zařízení
+ * Hook to delete device
  */
 export function useDeleteDevice() {
   const db = useDatabase();

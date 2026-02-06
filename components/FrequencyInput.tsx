@@ -12,7 +12,7 @@ export function FrequencyInput({ value, onChange, onSubmit }: FrequencyInputProp
   const [error, setError] = useState<string | undefined>();
 
   const handleChange = (text: string) => {
-    // Povolit pouze čísla
+    // Allow only numbers
     const numericValue = text.replace(/[^0-9]/g, '');
 
     if (numericValue === '') {
@@ -24,7 +24,6 @@ export function FrequencyInput({ value, onChange, onSubmit }: FrequencyInputProp
     const freq = parseInt(numericValue, 10);
     onChange(freq);
 
-    // Validovat
     if (!isValidFrequency(freq)) {
       setError('Frequency should be between 1000-6000 MHz');
     } else {

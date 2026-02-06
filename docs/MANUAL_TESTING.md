@@ -1,494 +1,494 @@
 # DroneFrequency - Manual Testing Plan
 
-Tento dokument obsahuje kompletní test plány pro manuální testování aplikace na fyzickém zařízení.
+This document contains complete test plans for manual testing of the application on physical devices.
 
-## Předpoklady
+## Prerequisites
 
-- Aplikace nainstalována na fyzickém Android/iOS zařízení
-- První spuštění proběhlo úspěšně (databáze inicializována, oficiální pásma načtena)
-- Zařízení má funkční displej a dotyková obrazovka
-
----
-
-## Test Plan 1: První spuštění aplikace
-
-### Cíl
-
-Ověřit, že aplikace se správně inicializuje při prvním spuštění.
-
-### Kroky
-
-1. Nainstalovat aplikaci na čisté zařízení (nebo vymazat data aplikace)
-2. Spustit aplikaci
-3. Počkat na dokončení inicializace
-
-### Očekávaný výsledek
-
-- ✅ Zobrazí se loading obrazovka s textem "Running migrations..."
-- ✅ Následně "Initializing database..."
-- ✅ Po dokončení se aplikace přepne na hlavní obrazovku
-- ✅ Žádné chybové hlášky
-- ✅ Aplikace nepadá
-
-### Poznámky
-
-- Inicializace by měla trvat max 2-3 sekundy
-- V konzoli (metro bundler) by měly být logy o seedování databáze
+- Application installed on physical Android/iOS device
+- First launch completed successfully (database initialized, official bands loaded)
+- Device has functional display and touchscreen
 
 ---
 
-## Test Plan 2: Hlavní průvodce - Základní workflow
+## Test Plan 1: First Application Launch
 
-### Cíl
+### Goal
 
-Otestovat hlavní funkci aplikace - výběr VTX/VRX a zadání frekvence.
+Verify that the application initializes correctly on first launch.
 
-### Předpoklady
+### Steps
 
-- Alespoň 1 VTX zařízení vytvořeno
-- Alespoň 1 VRX zařízení vytvořeno
+1. Install application on clean device (or clear application data)
+2. Launch application
+3. Wait for initialization to complete
 
-### Scénář A: Exact Match (Frekvence existuje)
+### Expected Result
 
-**Kroky:**
+- ✅ Loading screen displays with text "Running migrations..."
+- ✅ Followed by "Initializing database..."
+- ✅ After completion, application switches to main screen
+- ✅ No error messages
+- ✅ Application doesn't crash
 
-1. Otevřít aplikaci (měla by se otevřít hlavní obrazovka - Home tab)
-2. Vybrat VTX zařízení z dropdownu
-3. Vybrat VRX zařízení z dropdownu
-4. Zadat frekvenci 5800 MHz
-5. Stisknout Enter nebo kliknout mimo input
+### Notes
 
-**Očekávaný výsledek:**
+- Initialization should take max 2-3 seconds
+- Console (metro bundler) should show database seeding logs
 
-- ✅ VTX Setting zobrazí: Band (např. "F"), Název pásma (např. "FatShark"), Channel (např. "4")
-- ✅ VRX Setting zobrazí: Odpovídající band a channel pro VRX zařízení
-- ✅ Výsledky se zobrazí okamžitě
-- ✅ Tlačítko "Add to Favorites" je aktivní
+---
 
-### Scénář B: Nearest Match (Frekvence neexistuje)
+## Test Plan 2: Main Guide - Basic Workflow
 
-**Kroky:**
+### Goal
 
-1. Zadat frekvenci 5803 MHz (neexistuje v pásmu)
-2. Stisknout Enter
+Test the main application function - VTX/VRX selection and frequency entry.
 
-**Očekávaný výsledek:**
+### Prerequisites
 
-- ✅ Zobrazí se upozornění "Exact frequency not found"
-- ✅ Zobrazí se 2 tlačítka s nejbližšími frekvencemi:
+- At least 1 VTX device created
+- At least 1 VRX device created
+
+### Scenario A: Exact Match (Frequency exists)
+
+**Steps:**
+
+1. Open application (should open on main screen - Home tab)
+2. Select VTX device from dropdown
+3. Select VRX device from dropdown
+4. Enter frequency 5800 MHz
+5. Press Enter or tap outside input
+
+**Expected Result:**
+
+- ✅ VTX Setting displays: Band (e.g., "F"), Band name (e.g., "FatShark"), Channel (e.g., "4")
+- ✅ VRX Setting displays: Corresponding band and channel for VRX device
+- ✅ Results display immediately
+- ✅ "Add to Favorites" button is active
+
+### Scenario B: Nearest Match (Frequency doesn't exist)
+
+**Steps:**
+
+1. Enter frequency 5803 MHz (doesn't exist in band)
+2. Press Enter
+
+**Expected Result:**
+
+- ✅ Warning "Exact frequency not found" displays
+- ✅ 2 buttons with nearest frequencies display:
   - "5800 MHz" (3 MHz lower)
   - "5805 MHz" (2 MHz higher)
-- ✅ Po kliknutí na některou frekvenci se automaticky vyplní input a zobrazí se nastavení
+- ✅ Clicking on either frequency automatically fills input and displays settings
 
-### Scénář C: Frekvence mimo rozsah
+### Scenario C: Frequency out of range
 
-**Kroky:**
+**Steps:**
 
-1. Zadat frekvenci 5330 MHz (velmi nízká, pod většinou pásem)
-2. Stisknout Enter
+1. Enter frequency 5330 MHz (very low, below most bands)
+2. Press Enter
 
-**Očekávaný výsledek:**
+**Expected Result:**
 
-- ✅ Zobrazí se upozornění "Exact frequency not found"
-- ✅ Zobrazí se pouze tlačítko s vyšší frekvencí (např. "5333 MHz")
-- ✅ Nižší frekvence se nezobrazuje (neexistuje)
+- ✅ Warning "Exact frequency not found" displays
+- ✅ Only button with higher frequency displays (e.g., "5333 MHz")
+- ✅ Lower frequency doesn't display (doesn't exist)
 
 ---
 
-## Test Plan 3: Přidání VTX zařízení
+## Test Plan 3: Add VTX Device
 
-### Cíl
+### Goal
 
-Otestovat vytvoření nového VTX zařízení s výběrem pásem.
+Test creation of new VTX device with band selection.
 
-### Kroky
+### Steps
 
-1. Otevřít tab "Devices"
-2. V sekci "VTX Devices" kliknout na "[+ Add]"
-3. Zadat název: "My Whoop VTX"
-4. Vybrat typ: VTX (radio button)
-5. Vybrat pásma:
+1. Open "Devices" tab
+2. In "VTX Devices" section, click "[+ Add]"
+3. Enter name: "My Whoop VTX"
+4. Select type: VTX (radio button)
+5. Select bands:
    - ☑ Race Band (R) → Label: "R"
    - ☑ FatShark (F) → Label: "F"
    - ☑ Boscam A → Label: "A"
-6. Kliknout "Save Device"
+6. Click "Save Device"
 
-### Očekávaný výsledek
+### Expected Result
 
-- ✅ Formulář se zobrazí správně
-- ✅ Všechna oficiální pásma (A, B, E, F, R, D, U, O, L, H) jsou k dispozici
-- ✅ Lze vybrat více pásem
-- ✅ Pro každé pásmo lze zadat label
-- ✅ Po uložení se zařízení objeví v seznamu VTX Devices
-- ✅ Zařízení má správný název a zobrazené pásma
+- ✅ Form displays correctly
+- ✅ All official bands (A, B, E, F, R, D, U, O, L, H) are available
+- ✅ Multiple bands can be selected
+- ✅ Label can be entered for each band
+- ✅ After saving, device appears in VTX Devices list
+- ✅ Device has correct name and displayed bands
 
 ### Edge Cases
 
-**Test 1: Uložení bez vybraných pásem**
+**Test 1: Save without selected bands**
 
-- Kroky: Zkusit uložit zařízení bez vybraných pásem
-- Očekávaný výsledek: ✅ Validační chyba "Musí být vybráno alespoň jedno pásmo"
+- Steps: Try to save device without selected bands
+- Expected result: ✅ Validation error "At least one band must be selected"
 
-**Test 2: Duplicitní labely**
+**Test 2: Duplicate labels**
 
-- Kroky: Vybrat 2 pásma a dát jim stejný label (např. oba "A")
-- Očekávaný výsledek: ✅ Validační chyba "Labely musí být unikátní"
+- Steps: Select 2 bands and give them same label (e.g., both "A")
+- Expected result: ✅ Validation error "Labels must be unique"
 
 ---
 
-## Test Plan 4: Vytvoření custom pásma
+## Test Plan 4: Create Custom Band
 
-### Cíl
+### Goal
 
-Otestovat vytvoření vlastního frekvenčního pásma.
+Test creation of custom frequency band.
 
-### Kroky
+### Steps
 
-1. V "Add Device" formuláři kliknout na "[+ Create Custom Band]"
-2. Zadat název: "My Custom Band"
-3. Zadat Band Sign: "X"
-4. Vybrat počet kanálů: 4
-5. Zadat frekvence:
+1. In "Add Device" form, click "[+ Create Custom Band]"
+2. Enter name: "My Custom Band"
+3. Enter Band Sign: "X"
+4. Select channel count: 4
+5. Enter frequencies:
    - CH 1: 5300
    - CH 2: 5350
    - CH 3: 5400
    - CH 4: 5450
-6. Kliknout "Create"
+6. Click "Create"
 
-### Očekávaný výsledek
+### Expected Result
 
-- ✅ Modal se zobrazí správně
-- ✅ Počet inputů pro frekvence odpovídá vybranému počtu kanálů (4)
-- ✅ Po uložení se custom pásmo objeví v seznamu dostupných pásem
-- ✅ Custom pásmo lze vybrat pro zařízení
-- ✅ Custom pásmo funguje v hlavním průvodci
+- ✅ Modal displays correctly
+- ✅ Number of frequency inputs matches selected channel count (4)
+- ✅ After saving, custom band appears in available bands list
+- ✅ Custom band can be selected for device
+- ✅ Custom band works in main guide
 
 ### Edge Cases
 
-**Test 1: Prázdné frekvence**
+**Test 1: Empty frequencies**
 
-- Kroky: Zkusit vytvořit pásmo s nevyplněnými frekvencemi
-- Očekávaný výsledek: ✅ Validační chyba "Všechny frekvence musí být vyplněny"
-
----
-
-## Test Plan 5: Editace zařízení
-
-### Cíl
-
-Otestovat úpravu existujícího zařízení.
-
-### Kroky
-
-1. V seznamu zařízení kliknout na [⋮] (menu) u nějakého zařízení
-2. Vybrat "Edit"
-3. Změnit název zařízení
-4. Přidat/odebrat nějaké pásmo
-5. Změnit label některého pásma
-6. Kliknout "Save"
-
-### Očekávaný výsledek
-
-- ✅ Formulář se předvyplní aktuálními daty
-- ✅ Změny se uloží správně
-- ✅ Zařízení se aktualizuje v seznamu
-- ✅ Pokud je zařízení použité v hlavním průvodci, změny se projeví okamžitě
+- Steps: Try to create band with unfilled frequencies
+- Expected result: ✅ Validation error "All frequencies must be filled"
 
 ---
 
-## Test Plan 6: Smazání zařízení
+## Test Plan 5: Edit Device
 
-### Cíl
+### Goal
 
-Otestovat smazání zařízení.
+Test editing existing device.
 
-### Kroky
+### Steps
 
-1. V seznamu zařízení kliknout na [⋮] u nějakého zařízení
-2. Vybrat "Delete"
-3. Potvrdit smazání
+1. In device list, click [⋮] (menu) on a device
+2. Select "Edit"
+3. Change device name
+4. Add/remove some band
+5. Change label of some band
+6. Click "Save"
 
-### Očekávaný výsledek
+### Expected Result
 
-- ✅ Zobrazí se potvrzovací dialog
-- ✅ Po potvrzení se zařízení smaže ze seznamu
-- ✅ Pokud bylo zařízení použité v hlavním průvodci, dropdown se vyprázdní
-
----
-
-## Test Plan 7: Oblíbené konfigurace
-
-### Cíl
-
-Otestovat ukládání a používání oblíbených konfigurací.
-
-### Kroky
-
-1. V hlavním průvodci nastavit VTX, VRX a frekvenci
-2. Kliknout na "⭐ Add to Favorites"
-3. Zadat název (volitelné): "Race setup"
-4. Uložit
-5. Otevřít tab "Settings"
-6. V sekci "Favorites" by měla být nová položka
-7. Kliknout na položku
-
-### Očekávaný výsledek
-
-- ✅ Po uložení se zobrazí potvrzení
-- ✅ V Settings/Favorites se objeví nová položka
-- ✅ Položka obsahuje název, VTX, VRX a frekvenci
-- ✅ Po kliknutí na položku se aplikace přepne na Home tab a předvyplní data
-- ✅ Lze smazat oblíbenou položku
+- ✅ Form pre-fills with current data
+- ✅ Changes save correctly
+- ✅ Device updates in list
+- ✅ If device is used in main guide, changes reflect immediately
 
 ---
 
-## Test Plan 8: Historie použití
+## Test Plan 6: Delete Device
 
-### Cíl
+### Goal
 
-Ověřit že aplikace zaznamenává historii vyhledávání.
+Test device deletion.
 
-### Kroky
+### Steps
 
-1. V hlavním průvodci provést několik vyhledání (3-5x různé frekvence)
-2. Otevřít tab "Settings"
-3. Zkontrolovat sekci "History"
+1. In device list, click [⋮] on a device
+2. Select "Delete"
+3. Confirm deletion
 
-### Očekávaný výsledek
+### Expected Result
 
-- ✅ V historii se objevují všechna provedená vyhledání
-- ✅ Nejnovější vyhledání je nahoře
-- ✅ Každá položka obsahuje VTX, VRX, frekvenci a timestamp
-- ✅ Po kliknutí na položku se předvyplní data v hlavním průvodci
-- ✅ Historie obsahuje max 10 položek (starší se automaticky mažou)
+- ✅ Confirmation dialog displays
+- ✅ After confirmation, device is deleted from list
+- ✅ If device was used in main guide, dropdown clears
 
 ---
 
-## Test Plan 9: Přepínání tématu
+## Test Plan 7: Favorite Configurations
 
-### Cíl
+### Goal
 
-Otestovat přepínání mezi světlým a tmavým režimem.
+Test saving and using favorite configurations.
 
-### Kroky
+### Steps
 
-1. Otevřít tab "Settings"
-2. V sekci "Appearance" vybrat "Dark"
-3. Zkontrolovat, že se celá aplikace přepne na tmavý režim
-4. Vybrat "Light"
-5. Zkontrolovat, že se aplikace přepne na světlý režim
-6. Vybrat "System"
-7. Změnit systémové nastavení telefonu
+1. In main guide, set VTX, VRX and frequency
+2. Click "⭐ Add to Favorites"
+3. Enter name (optional): "Race setup"
+4. Save
+5. Open "Settings" tab
+6. In "Favorites" section, new item should appear
+7. Click on item
 
-### Očekávaný výsledek
+### Expected Result
 
-- ✅ Přepínání mezi režimy funguje okamžitě
-- ✅ Všechny obrazovky používají správné barvy
-- ✅ Volba se uloží a obnoví po restartu aplikace
-- ✅ "System" mód respektuje systémové nastavení telefonu
+- ✅ After saving, confirmation displays
+- ✅ In Settings/Favorites, new item appears
+- ✅ Item contains name, VTX, VRX and frequency
+- ✅ Clicking item switches to Home tab and pre-fills data
+- ✅ Favorite item can be deleted
 
 ---
 
-## Test Plan 10: Vizualizace spektra (Spectrum tab)
+## Test Plan 8: Usage History
 
-### Cíl
+### Goal
 
-Otestovat zobrazení grafu a mřížky frekvencí.
+Verify that application records search history.
 
-### Kroky
+### Steps
 
-1. Otevřít tab "Spectrum"
-2. Zkontrolovat graf frekvencí
-3. Zkontrolovat Channel Grid
-4. V hlavním průvodci nastavit nějakou frekvenci
-5. Vrátit se na Spectrum tab
+1. In main guide, perform several searches (3-5x different frequencies)
+2. Open "Settings" tab
+3. Check "History" section
 
-### Očekávaný výsledek
+### Expected Result
 
-- ✅ Graf zobrazuje všechna frekvenční pásma
-- ✅ Každé pásmo je označeno svým písmenem (A, B, E, F, R, D, U, O, L, H)
-- ✅ Channel Grid zobrazuje mřížku všech kanálů
-- ✅ Aktuálně vybraná frekvence je zvýrazněná
-- ✅ Lze kliknout na kanál v gridu a nastavit ho jako aktivní
+- ✅ All performed searches appear in history
+- ✅ Most recent search is at top
+- ✅ Each item contains VTX, VRX, frequency and timestamp
+- ✅ Clicking item pre-fills data in main guide
+- ✅ History contains max 10 items (older ones automatically deleted)
+
+---
+
+## Test Plan 9: Theme Toggle
+
+### Goal
+
+Test switching between light and dark mode.
+
+### Steps
+
+1. Open "Settings" tab
+2. In "Appearance" section, select "Dark"
+3. Verify entire application switches to dark mode
+4. Select "Light"
+5. Verify application switches to light mode
+6. Select "System"
+7. Change phone system settings
+
+### Expected Result
+
+- ✅ Switching between modes works immediately
+- ✅ All screens use correct colors
+- ✅ Selection saves and restores after app restart
+- ✅ "System" mode respects phone system settings
+
+---
+
+## Test Plan 10: Spectrum Visualization (Spectrum tab)
+
+### Goal
+
+Test frequency chart and grid display.
+
+### Steps
+
+1. Open "Spectrum" tab
+2. Check frequency chart
+3. Check Channel Grid
+4. In main guide, set some frequency
+5. Return to Spectrum tab
+
+### Expected Result
+
+- ✅ Chart displays all frequency bands
+- ✅ Each band is marked with its letter (A, B, E, F, R, D, U, O, L, H)
+- ✅ Channel Grid displays grid of all channels
+- ✅ Currently selected frequency is highlighted
+- ✅ Can click channel in grid and set it as active
 
 ---
 
 ## Test Plan 11: Find Free Channel
 
-### Cíl
+### Goal
 
-Otestovat nástroj pro hledání volných kanálů.
+Test tool for finding free channels.
 
-### Kroky
+### Steps
 
-1. Otevřít tab "Find"
-2. Kliknout "[+ Add]" a přidat používanou frekvenci: 5800
-3. Přidat další frekvenci: 5760
-4. Přidat další frekvenci: 5880
-5. Zkontrolovat seznam doporučených kanálů
+1. Open "Find" tab
+2. Click "[+ Add]" and add used frequency: 5800
+3. Add another frequency: 5760
+4. Add another frequency: 5880
+5. Check recommended channels list
 
-### Očekávaný výsledek
+### Expected Result
 
-- ✅ Lze přidat více používaných frekvencí
-- ✅ Doporučené kanály jsou seřazené podle nejmenšího rušení
-- ✅ Pro každý doporučený kanál je uvedena vzdálenost od nejbližší používané frekvence
-- ✅ Kanály příliš blízko (< 40 MHz) jsou označeny ⚠️
-- ✅ Bezpečné kanály (> 40 MHz) jsou označeny ✅
-- ✅ Po kliknutí na doporučený kanál se nastaví v hlavním průvodci
-
----
-
-## Test Plan 12: Persistence dat
-
-### Cíl
-
-Ověřit, že data přežijí restart aplikace.
-
-### Kroky
-
-1. Vytvořit VTX a VRX zařízení
-2. Vytvořit custom pásmo
-3. Přidat oblíbenou konfiguraci
-4. Provést několik vyhledání (historie)
-5. Zavřít aplikaci (force close)
-6. Otevřít aplikaci znovu
-
-### Očekávaný výsledek
-
-- ✅ Všechna vytvořená zařízení jsou stále k dispozici
-- ✅ Custom pásmo existuje
-- ✅ Oblíbené konfigurace jsou zachovány
-- ✅ Historie je zachována
-- ✅ Poslední výběr v hlavním průvodci je předvyplněn
+- ✅ Multiple used frequencies can be added
+- ✅ Recommended channels are sorted by least interference
+- ✅ Distance from nearest used frequency is shown for each recommended channel
+- ✅ Channels too close (< 40 MHz) are marked ⚠️
+- ✅ Safe channels (> 40 MHz) are marked ✅
+- ✅ Clicking recommended channel sets it in main guide
 
 ---
 
-## Test Plan 13: Validace vstupů
+## Test Plan 12: Data Persistence
 
-### Cíl
+### Goal
 
-Otestovat validaci všech vstupních polí.
+Verify that data survives app restart.
+
+### Steps
+
+1. Create VTX and VRX devices
+2. Create custom band
+3. Add favorite configuration
+4. Perform several searches (history)
+5. Close application (force close)
+6. Open application again
+
+### Expected Result
+
+- ✅ All created devices are still available
+- ✅ Custom band exists
+- ✅ Favorite configurations are preserved
+- ✅ History is preserved
+- ✅ Last selection in main guide is pre-filled
+
+---
+
+## Test Plan 13: Input Validation
+
+### Goal
+
+Test validation of all input fields.
 
 ### Test Cases
 
-**Frekvence v hlavním průvodci:**
+**Frequency in main guide:**
 
-- Zadání písmen: ❌ Mělo by povolit pouze čísla
-- Zadání záporného čísla: ❌ Mělo by zobrazit chybu
-- Zadání 0: ❌ Mělo by zobrazit chybu
-- Zadání velmi vysokého čísla (10000): ⚠️ Mělo by varovat ale povolit
+- Enter letters: ❌ Should only allow numbers
+- Enter negative number: ❌ Should show error
+- Enter 0: ❌ Should show error
+- Enter very high number (10000): ⚠️ Should warn but allow
 
-**Název zařízení:**
+**Device name:**
 
-- Prázdný název: ❌ Mělo by zobrazit chybu "Název je povinný"
-- Velmi dlouhý název (200 znaků): ✅ Mělo by to fungovat
+- Empty name: ❌ Should show error "Name is required"
+- Very long name (200 characters): ✅ Should work
 
-**Custom Band frekvence:**
+**Custom Band frequencies:**
 
-- Prázdná frekvence: ❌ Mělo by zobrazit chybu
-- Neplatná frekvence: ❌ Mělo by zobrazit chybu
+- Empty frequency: ❌ Should show error
+- Invalid frequency: ❌ Should show error
 
 ---
 
-## Test Plan 14: Performance a UX
+## Test Plan 14: Performance and UX
 
-### Cíl
+### Goal
 
-Otestovat výkon a uživatelskou zkušenost.
+Test performance and user experience.
 
 ### Test Cases
 
-**Rychlost vyhledávání:**
+**Search speed:**
 
-- Čas od zadání frekvence do zobrazení výsledků: < 100ms
-- Vyhledávání nereaguje na každý keystroke (debounce)
+- Time from entering frequency to displaying results: < 100ms
+- Search doesn't react to every keystroke (debounce)
 
 **Scroll performance:**
 
-- Scrollování v seznamu zařízení: Plynulé, žádné zadrhávání
-- Scrollování v Channel Grid: Plynulé
+- Scrolling in device list: Smooth, no stuttering
+- Scrolling in Channel Grid: Smooth
 
 **Loading states:**
 
-- Při načítání dat se zobrazuje loading indicator
-- Tlačítka během operací jsou disabled
+- Loading indicator displays when loading data
+- Buttons are disabled during operations
 
 **Error handling:**
 
-- Při chybě se zobrazí srozumitelná hláška
-- Aplikace nepadá, lze pokračovat
+- Understandable error message displays on error
+- Application doesn't crash, can continue
 
 ---
 
-## Checklist pro release
+## Release Checklist
 
-Po implementaci všech funkcí projít tento checklist:
+After implementing all features, go through this checklist:
 
-### MVP Funkce
+### MVP Features
 
-- [ ] Hlavní průvodce funguje (VTX + VRX výběr + frekvence)
-- [ ] Nearest frequency suggestions fungují
-- [ ] Přidání VTX zařízení funguje
-- [ ] Přidání VRX zařízení funguje
-- [ ] Editace zařízení funguje
-- [ ] Smazání zařízení funguje
-- [ ] Vytvoření custom pásma funguje
-- [ ] Všech 10 oficiálních pásem je načteno
+- [ ] Main guide works (VTX + VRX selection + frequency)
+- [ ] Nearest frequency suggestions work
+- [ ] Add VTX device works
+- [ ] Add VRX device works
+- [ ] Edit device works
+- [ ] Delete device works
+- [ ] Create custom band works
+- [ ] All 10 official bands are loaded
 
-### Nice-to-have funkce
+### Nice-to-have Features
 
-- [ ] Vizualizace spektra
+- [ ] Spectrum visualization
 - [ ] Find free channel
-- [ ] Oblíbené konfigurace
-- [ ] Historie použití
-- [ ] Přepínání tématu
-- [ ] Manuál/nápověda
+- [ ] Favorite configurations
+- [ ] Usage history
+- [ ] Theme toggle
+- [ ] Manual/help
 
-### Kvalita a stabilita
+### Quality and Stability
 
-- [ ] Aplikace nepadá při běžném používání
-- [ ] Žádné memory leaky
-- [ ] Rychlost < 100ms pro vyhledávání
-- [ ] Všechny testy procházejí
-- [ ] Lint nehlásí chyby
+- [ ] Application doesn't crash during normal use
+- [ ] No memory leaks
+- [ ] Speed < 100ms for searching
+- [ ] All tests pass
+- [ ] Lint reports no errors
 
-### UX a Design
+### UX and Design
 
-- [ ] Konzistentní design napříč obrazovkami
-- [ ] Jasné chybové hlášky
-- [ ] Loading states všude kde je potřeba
-- [ ] Tlačítka mají dostatečně velkou touch area (min 44x44)
-- [ ] Text je čitelný na malých i velkých displejích
+- [ ] Consistent design across screens
+- [ ] Clear error messages
+- [ ] Loading states everywhere needed
+- [ ] Buttons have sufficiently large touch area (min 44x44)
+- [ ] Text is readable on small and large displays
 
-### Dokumentace
+### Documentation
 
-- [ ] README.md aktualizovaný
-- [ ] AGENTS.md aktualizovaný
-- [ ] Tento test plán odpovídá aktuálnímu stavu
-
----
-
-## Reporting Bugů
-
-Při nalezení bugu prosím zaznamenejte:
-
-1. **Název**: Stručný popis problému
-2. **Kroky k reprodukci**: Přesné kroky jak problém vyvolat
-3. **Očekávané chování**: Co by se mělo stát
-4. **Aktuální chování**: Co se skutečně děje
-5. **Prostředí**:
-   - Platforma (Android/iOS)
-   - Verze OS
-   - Model zařízení
-6. **Screenshot/Video**: Pokud možno
-7. **Konzole logy**: Z Metro bundleru
+- [ ] README.md updated
+- [ ] AGENTS.md updated
+- [ ] This test plan matches current state
 
 ---
 
-## Poznámky k testování
+## Bug Reporting
 
-- Testujte na **reálném zařízení**, ne pouze na emulátoru
-- Testujte na **různých velikostech obrazovek** (malý telefon, tablet)
-- Testujte v **obou orientacích** (portrait i landscape)
-- Testujte při **špatném připojení** (airplane mode pro offline test)
-- Testujte s **velkým množstvím dat** (10+ zařízení, 100+ položek historie)
+When finding a bug, please record:
+
+1. **Name**: Brief problem description
+2. **Steps to reproduce**: Exact steps to trigger problem
+3. **Expected behavior**: What should happen
+4. **Actual behavior**: What actually happens
+5. **Environment**:
+   - Platform (Android/iOS)
+   - OS version
+   - Device model
+6. **Screenshot/Video**: If possible
+7. **Console logs**: From Metro bundler
+
+---
+
+## Testing Notes
+
+- Test on **real device**, not just emulator
+- Test on **different screen sizes** (small phone, tablet)
+- Test in **both orientations** (portrait and landscape)
+- Test with **poor connection** (airplane mode for offline test)
+- Test with **large amount of data** (10+ devices, 100+ history items)

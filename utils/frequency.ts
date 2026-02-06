@@ -1,7 +1,7 @@
 import type { FrequencyMatch, NearestFrequency } from '@/types';
 
 /**
- * Najde přesnou shodu frekvence v seznamu možností
+ * Finds exact frequency match in options list
  */
 export function findExactMatch(
   options: {
@@ -18,7 +18,7 @@ export function findExactMatch(
 }
 
 /**
- * Najde nejbližší frekvence k cílové frekvenci
+ * Finds nearest frequencies to target frequency
  */
 export function findNearestFrequencies(
   options: {
@@ -31,7 +31,6 @@ export function findNearestFrequencies(
   }[],
   targetFrequency: number
 ): { lower: NearestFrequency[]; upper: NearestFrequency[] } {
-  // Najít všechny nižší frekvence
   const lowerOptions = options
     .filter((opt) => opt.frequency < targetFrequency)
     .map((opt) => ({
@@ -40,7 +39,6 @@ export function findNearestFrequencies(
     }))
     .sort((a, b) => a.distance - b.distance);
 
-  // Najít všechny vyšší frekvence
   const upperOptions = options
     .filter((opt) => opt.frequency > targetFrequency)
     .map((opt) => ({
@@ -49,7 +47,7 @@ export function findNearestFrequencies(
     }))
     .sort((a, b) => a.distance - b.distance);
 
-  // Vrátit nejbližší z každé strany (může být více se stejnou vzdáleností)
+  // Return nearest from each side (may be multiple with same distance)
   const minLowerDistance = lowerOptions[0]?.distance;
   const minUpperDistance = upperOptions[0]?.distance;
 
@@ -67,8 +65,8 @@ export function findNearestFrequencies(
 }
 
 /**
- * Vypočítá interference score mezi používanými frekvencemi
- * Vyšší score = lepší (větší odstup)
+ * Calculates interference score between used frequencies
+ * Higher score = better (greater separation)
  */
 export function calculateInterferenceScore(
   targetFrequency: number,
@@ -82,15 +80,15 @@ export function calculateInterferenceScore(
 }
 
 /**
- * Kontrola jestli je frekvence validní (v rozumném rozsahu)
+ * Check if frequency is valid (in reasonable range)
  */
 export function isValidFrequency(frequency: number): boolean {
-  // Akceptujeme široký rozsah pro různá pásma (1.2 GHz - 6 GHz)
+  // Accept wide range for different bands (1.2 GHz - 6 GHz)
   return frequency >= 1000 && frequency <= 6000;
 }
 
 /**
- * Formátování frekvence pro zobrazení
+ * Format frequency for display
  */
 export function formatFrequency(frequency: number): string {
   return `${frequency} MHz`;

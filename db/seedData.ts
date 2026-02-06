@@ -1,5 +1,5 @@
-// Oficiální frekvenční pásma pro FPV (z data/bands.csv)
-// Formát: každé pásmo má 1-8 kanálů s frekvencemi v MHz
+// Official frequency bands for FPV (from data/bands.csv)
+// Format: each band has 1-8 channels with frequencies in MHz
 
 export interface BandData {
   sign: string;

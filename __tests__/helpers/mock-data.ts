@@ -1,12 +1,12 @@
 /**
- * Mock data pro testy
+ * Mock data for tests
  */
 
 import type { BandData } from '@/db/seedData';
 import { DeviceType } from '@/types';
 
 /**
- * Testovací pásma - subset oficiálních pásem pro rychlejší testy
+ * Test bands - subset of official bands for faster tests
  */
 export const TEST_BANDS: BandData[] = [
   {
@@ -30,13 +30,13 @@ export const TEST_BANDS: BandData[] = [
 ];
 
 /**
- * Testovací zařízení konfigurace
+ * Test device configurations
  */
 export const TEST_DEVICES = {
   vtx: {
     name: 'Test VTX Device',
     type: DeviceType.VTX,
-    bandIds: [1, 2], // F a R pásma (po seedu)
+    bandIds: [1, 2], // F and R bands (after seeding)
     bandLabels: {
       1: 'F',
       2: 'R',
@@ -62,10 +62,10 @@ export const TEST_DEVICES = {
 } as const;
 
 /**
- * Testovací frekvence pro vyhledávání
+ * Test frequencies for lookup
  */
 export const TEST_FREQUENCIES = {
-  // Přesné frekvence z FatShark pásma
+  // Exact frequencies from FatShark band
   exact: {
     f1: 5740, // F1
     f2: 5760, // F2
@@ -73,12 +73,12 @@ export const TEST_FREQUENCIES = {
     f4: 5800, // F4
     f5: 5820, // F5
   },
-  // Nepřesné frekvence (mezi kanály)
+  // Inexact frequencies (between channels)
   inexact: {
-    between_f1_f2: 5750, // Mezi F1 (5740) a F2 (5760)
-    between_f3_f4: 5790, // Mezi F3 (5780) a F4 (5800)
+    between_f1_f2: 5750, // Between F1 (5740) and F2 (5760)
+    between_f3_f4: 5790, // Between F3 (5780) and F4 (5800)
   },
-  // Neplatné frekvence (mimo rozsah)
+  // Invalid frequencies (out of range)
   invalid: {
     tooLow: 500,
     tooHigh: 7000,
@@ -91,7 +91,7 @@ export const TEST_FREQUENCIES = {
 } as const;
 
 /**
- * Očekávané výsledky pro testovací frekvence
+ * Expected results for test frequencies
  */
 export const EXPECTED_RESULTS = {
   f4: {

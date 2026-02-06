@@ -11,13 +11,13 @@ import { Alert } from 'react-native';
 import { renderWithProviders } from '../helpers/test-utils';
 import { mockRouter } from '../setup';
 
+import { useDeleteDevice, useDevices } from '@/hooks/useDevices';
+
 // Mock useDevices hook
 jest.mock('@/hooks/useDevices', () => ({
   useDevices: jest.fn(),
   useDeleteDevice: jest.fn(),
 }));
-
-import { useDeleteDevice, useDevices } from '@/hooks/useDevices';
 
 describe('DevicesScreen', () => {
   const mockMutate = jest.fn();
