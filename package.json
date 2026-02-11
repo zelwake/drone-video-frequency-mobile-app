@@ -1,7 +1,7 @@
 {
   "name": "fpv-freqmate",
   "main": "expo-router/entry",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
@@ -9,7 +9,10 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "test": "jest --silent",
-    "test:watch": "jest --watch --silent"
+    "test:watch": "jest --watch --silent",
+    "prebuild": "npx expo prebuild",
+    "local:android": "npx expo run:android --variant release",
+    "local:ios": "npx expo run:ios --variant release"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

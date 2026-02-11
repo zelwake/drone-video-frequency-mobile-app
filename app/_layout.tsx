@@ -7,10 +7,17 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { drizzle } from 'drizzle-orm/expo-sqlite';
 import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
 import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import * as SQLite from 'expo-sqlite';
 import { SQLiteProvider } from 'expo-sqlite';
 import { Suspense, useEffect, useState } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
+
+// Set the animation options. This is optional.
+SplashScreen.setOptions({
+  duration: 3000,
+  fade: true,
+});
 
 const expo = SQLite.openDatabaseSync(databaseName, { enableChangeListener: true });
 const db = drizzle(expo);
